@@ -11,21 +11,23 @@ const routes = [
 export default function Home() {
   return (
     <NavShell>
-      <div className="space-y-4 p-4">
+      <div className="space-y-6 p-4">
         <div>
           <h1 className="text-3xl font-semibold text-foreground">Scaffold</h1>
           <p className="mt-1 text-sm text-muted">
             Blank canvas — swap this page for whatever the brief needs tomorrow.
           </p>
         </div>
-        {routes.map((r) => (
-          <Link key={r.href} href={r.href}>
-            <Card className="transition-colors hover:bg-background-chat">
-              <h2 className="text-lg font-semibold text-foreground">{r.title}</h2>
-              <p className="mt-1 text-sm text-muted">{r.desc}</p>
-            </Card>
-          </Link>
-        ))}
+        <div className="space-y-5">
+          {routes.map((r) => (
+            <Link key={r.href} href={r.href}>
+              <Card className="transition-colors hover:bg-background-chat">
+                <h2 className="text-lg font-semibold text-foreground">{r.title}</h2>
+                <p className="mt-1 text-sm text-muted">{r.desc}</p>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </div>
     </NavShell>
   );
