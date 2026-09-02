@@ -20,7 +20,7 @@ export default function Home() {
         </div>
         <div className="space-y-5">
           {routes.map((r) => (
-            <Link key={r.href} href={r.href}>
+            <Link key={r.href} href={r.href} className="block">
               <Card className="transition-colors hover:bg-background-chat">
                 <h2 className="text-lg font-semibold text-foreground">{r.title}</h2>
                 <p className="mt-1 text-sm text-muted">{r.desc}</p>
