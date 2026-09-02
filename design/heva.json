@@ -1,0 +1,169 @@
+{
+  "source": "https://app.heva.co (practice/27 detail, /heva/27 chat, /practice/27/store) \u2014 analyzed 2026-09-02",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        32
+      ],
+      "base_unit": 8
+    },
+    "typography": {
+      "families": [
+        "madeCarvingSoft (proprietary \u2014 100% of samples across all 3 pages)"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "32px",
+          "weight": "600",
+          "lineHeight": "40px"
+        },
+        {
+          "role": "h2",
+          "size": "20-32px",
+          "weight": "600",
+          "lineHeight": "28-38px",
+          "note": "varies by context/nesting"
+        },
+        {
+          "role": "h3",
+          "size": "18px",
+          "weight": "600",
+          "lineHeight": "24px"
+        },
+        {
+          "role": "body",
+          "size": "14-15px",
+          "weight": "400",
+          "lineHeight": "20-22.5px"
+        },
+        {
+          "role": "ui-chrome (buttons/nav)",
+          "size": "12-16px",
+          "weight": "300"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background",
+        "value": "#FFFFFF",
+        "areaPct": "66-79% on non-chat pages"
+      },
+      {
+        "role": "background-chat",
+        "value": "#F8FAFC",
+        "areaPct": "98% of chat page"
+      },
+      {
+        "role": "text-primary",
+        "value": "#2F2F30"
+      },
+      {
+        "role": "text-secondary / muted",
+        "value": "#8C8D91",
+        "note": "system signal \u2014 present on all 3 pages"
+      },
+      {
+        "role": "text-navy",
+        "value": "#1A2433"
+      },
+      {
+        "role": "text-slate",
+        "value": "#5B6473"
+      },
+      {
+        "role": "brand (links, secondary buttons, prices)",
+        "value": "#0056D6",
+        "note": "system signal \u2014 detail + store pages"
+      },
+      {
+        "role": "accent (single primary CTA only)",
+        "value": "#C3FB11",
+        "note": "appears exactly once per page, ~17.5% area on the one CTA it's used for"
+      },
+      {
+        "role": "chat-local-blue (inconsistent)",
+        "value": "#3B82F6",
+        "note": "Tailwind default blue-500 \u2014 only seen on chat page, likely an unstyled default rather than an intentional brand color"
+      }
+    ],
+    "radius": [
+      "8px (controls)",
+      "12px (secondary buttons)",
+      "16px (cards)",
+      "9999px (pills/chips)"
+    ],
+    "shadows": [
+      "rgba(16,24,40,0.06) \u2014 single layer, only on the one expanded/primary card",
+      "rgba(0,0,0,0.05) \u2014 near-imperceptible, rare"
+    ],
+    "image_ratios": [
+      {
+        "usage": "profile photo",
+        "ratio": "0.87:1"
+      },
+      {
+        "usage": "procedure icon",
+        "ratio": "1:1"
+      }
+    ],
+    "grid": {
+      "max_width": "~480-800px (mobile/portrait-first, no wide desktop grid observed)",
+      "columns": 2,
+      "gutter": "16px",
+      "note": "2-col grid only seen for the procedures list; everything else is single-column, stacked cards"
+    }
+  },
+  "taste": [
+    {
+      "name": "One loud color, everywhere else quiet",
+      "type": "restraint",
+      "trigger": "Deciding how to draw the eye to the single most important action per screen (book, chat, buy).",
+      "decision": "Chose to reserve lime #C3FB11 for exactly one primary CTA per screen, over using the already-present brand blue more prominently or introducing multiple accent colors for hierarchy.",
+      "reason": "A patient arriving from a shared link needs one unambiguous next step, not a palette to interpret.",
+      "evidence": [
+        "Lime appears only on the detail page's \"Chat now\" button (~17.5% of visible area) and nowhere else across 3 pages analyzed",
+        "Blue #0056D6 is reused for ~15 other roles (links, secondary buttons, prices) \u2014 never promoted to primary-CTA duty"
+      ]
+    },
+    {
+      "name": "Borders do the separating, shadows barely whisper",
+      "type": "restraint",
+      "trigger": "Separating 5+ stacked service cards on the store page without the page feeling heavy.",
+      "decision": "Chose 1px borders + 16px radius as the default card treatment, over drop shadows for depth.",
+      "reason": "A healthcare-procedure store should read as a calm form, not a shopping app stacked with drop shadows.",
+      "evidence": [
+        "7 of 8 detected card elements on the store page carry shadow: null",
+        "Only the one expanded/primary card (\"Dental Smile pack\") carries a shadow, and it's rgba(16,24,40,0.06) \u2014 barely perceptible"
+      ]
+    },
+    {
+      "name": "Everything lives on an 8px grid, no exceptions",
+      "type": "system",
+      "trigger": "Three visually distinct surfaces (profile, store, chat), likely built as separate flows.",
+      "decision": "Constrained every gap/margin/padding to multiples of 4px (dominant values 8/16/24), over letting each surface pick its own spacing rhythm.",
+      "reason": "Consistent tap targets and breathing room let a patient move between looking at a doctor, buying a service, and chatting without the layout resetting its rules.",
+      "evidence": [
+        "spacingDistribution's top values are 8px, 16px, 24px on all 3 pages, captured independently"
+      ]
+    },
+    {
+      "name": "One typeface, three weights, no exceptions",
+      "type": "restraint",
+      "trigger": "Needing to express hierarchy (headline vs. button label vs. body copy) across three different surfaces.",
+      "decision": "Chose a single custom rounded family (madeCarvingSoft) in only 300/400/600, over pairing a display font with a body font or adding a 700 bold weight.",
+      "reason": "A single rounded typeface system reads as approachable rather than corporate \u2014 a deliberate choice for patients who may already be anxious about a medical decision.",
+      "evidence": [
+        "uniqueFamilies is 100% single-family across all 3 pages (129/59/101 sampled elements)",
+        "weightDistribution caps at 600; only one incidental 700 appears"
+      ]
+    }
+  ]
+}
