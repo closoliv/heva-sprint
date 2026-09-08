@@ -2,30 +2,54 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessageCircle, Store, UserRound } from "lucide-react";
+import { AlertTriangle, Inbox, MessageCircle, SlidersHorizontal, Store, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const tabs = [
+const patientTabs = [
   { href: "/list/1", label: "Profile", icon: UserRound, match: (p: string) => p.startsWith("/list/") },
   { href: "/list", label: "Store", icon: Store, match: (p: string) => p === "/list" },
   { href: "/chat", label: "Chat", icon: MessageCircle, match: (p: string) => p.startsWith("/chat") },
 ];
 
-export function NavShell({ title, children }: { title?: string; children: React.ReactNode }) {
+const providerTabs = [
+  {
+    href: "/console/inbound",
+    label: "Inbound",
+    icon: Inbox,
+    match: (p: string) => p.startsWith("/console/inbound") || p.startsWith("/console/post-visit"),
+  },
+  { href: "/console/escalations", label: "Escalations", icon: AlertTriangle, match: (p: string) => p === "/console/escalations" },
+  { href: "/console/fine-tuning", label: "Fine-tuning", icon: SlidersHorizontal, match: (p: string) => p === "/console/fine-tuning" },
+  { href: "/console/profile", label: "Profile", icon: UserRound, match: (p: string) => p === "/console/profile" },
+];
+
+export function NavShell({
+  title,
+  nav = "patient",
+  wide = false,
+  children,
+}: {
+  title?: string;
+  nav?: "patient" | "provider";
+  wide?: boolean;
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
+  const tabs = nav === "provider" ? providerTabs : patientTabs;
 
   return (
-    <div className="min-h-screen bg-background-chat sm:flex sm:items-center sm:justify-center sm:p-8">
-      <div className="mx-auto flex min-h-screen w-full max-w-app flex-col bg-white sm:min-h-0 sm:max-w-[800px] sm:overflow-hidden sm:rounded-2xl sm:border sm:border-border sm:shadow-subtle">
-        <header className="flex items-center gap-2 border-b border-border px-4 py-3">
+    <div className="flex h-dvh flex-col bg-white">
+      <header className="flex shrink-0 items-center gap-3 border-b border-border px-4 py-3 sm:px-6">
+        <Link href="/" className="flex shrink-0 items-center gap-2">
           <div className="h-7 w-7 shrink-0 rounded-md bg-brand" aria-hidden />
-          <span className="text-lg font-semibold text-foreground">[practice]</span>
-          {title && <span className="ml-auto text-sm text-muted">{title}</span>}
-        </header>
+          <span className="text-lg font-semibold text-foreground">heva</span>
+        </Link>
 
-        <main className="flex-1">{children}</main>
+        {title && (
+          <span className="hidden truncate text-sm font-medium text-muted sm:inline">{title}</span>
+        )}
 
-        <nav className="sticky bottom-0 flex border-t border-border bg-white">
+        <nav className="ml-auto flex items-center gap-1 sm:gap-2">
           {tabs.map(({ href, label, icon: Icon, match }) => {
             const active = match(pathname);
             return (
@@ -33,17 +57,21 @@ export function NavShell({ title, children }: { title?: string; children: React.
                 key={href}
                 href={href}
                 className={cn(
-                  "flex flex-1 flex-col items-center gap-1 py-2.5 text-xs font-medium",
-                  active ? "text-brand" : "text-muted"
+                  "flex items-center gap-1.5 rounded-pill px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
+                  active ? "bg-brand-50 text-brand" : "text-muted hover:bg-background-chat"
                 )}
               >
-                <Icon size={20} strokeWidth={active ? 2.4 : 1.8} />
-                {label}
+                <Icon size={16} strokeWidth={active ? 2.4 : 1.8} />
+                <span className="hidden sm:inline">{label}</span>
               </Link>
             );
           })}
         </nav>
-      </div>
+      </header>
+
+      <main className="flex-1 overflow-y-auto">
+        <div className={cn("mx-auto h-full w-full", wide ? "max-w-6xl" : "max-w-[800px]")}>{children}</div>
+      </main>
     </div>
   );
 }

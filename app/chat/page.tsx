@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Pill } from "@/components/ui/pill";
 import { NavShell } from "@/components/nav-shell";
-import { Mic, ArrowUp } from "lucide-react";
+import { Mic, Paperclip } from "lucide-react";
+import { SendIcon } from "@/components/ui/send-icon";
 
 const suggestions = ["Suggestion one", "Suggestion two", "Suggestion three", "Suggestion four"];
 
@@ -12,7 +13,7 @@ export default function ChatPage() {
 
   return (
     <NavShell title="Chat">
-      <div className="flex h-[calc(100vh-8.5rem)] flex-col bg-background-chat">
+      <div className="flex h-full flex-col bg-white">
         <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
           <h1 className="text-xl font-semibold text-foreground">What can I help you with?</h1>
           <div className="flex flex-wrap justify-center gap-2">
@@ -22,7 +23,10 @@ export default function ChatPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 border-t border-border bg-background-chat p-3">
+        <div className="flex items-center gap-2 border-t border-border bg-white p-3">
+          <button className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-brand text-white">
+            <Paperclip size={18} />
+          </button>
           <div className="flex flex-1 items-center rounded-pill border border-border bg-white px-4">
             <input
               value={value}
@@ -31,11 +35,16 @@ export default function ChatPage() {
               className="h-11 flex-1 bg-transparent text-sm outline-none placeholder:text-muted"
             />
           </div>
-          <button className="flex h-11 w-11 items-center justify-center rounded-pill bg-brand text-white">
+          <button className="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-brand text-white">
             <Mic size={18} />
           </button>
-          <button className="flex h-11 w-11 items-center justify-center rounded-pill bg-brand/40 text-white">
-            <ArrowUp size={18} />
+          <button
+            type="button"
+            disabled={!value.trim()}
+            aria-label="Send message"
+            className="h-8 w-12 shrink-0 disabled:opacity-50"
+          >
+            <SendIcon className="h-full w-full" />
           </button>
         </div>
       </div>
