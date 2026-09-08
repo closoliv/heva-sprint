@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, Fragment } from "react";
-import { ArrowUp, Undo2, X } from "lucide-react";
+import { ArrowUp, Mic, Paperclip, Undo2, X } from "lucide-react";
 import { NavShell } from "@/components/nav-shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -277,11 +277,14 @@ export default function PostVisitRecordPage() {
   }
 
   const showField = isAnswering && (currentStepId === "red_flags" || fieldRevealed);
-  const canRevealManually = stepHasChips && !currentConfig?.customChips?.length;
+
+  function revealField() {
+    if (isAnswering && !fieldRevealed) setFieldRevealed(true);
+  }
 
   return (
     <NavShell title="Post-visit record" nav="provider">
-      <div className="flex h-full flex-col bg-background-chat">
+      <div className="flex h-full flex-col bg-white">
         {history.length > 0 && currentStepId !== "sent" && (
           <div className="flex shrink-0 justify-end border-b border-border bg-white px-4 py-2">
             <button
@@ -341,26 +344,16 @@ export default function PostVisitRecordPage() {
                 </div>
               ) : (
                 stepHasChips && (
-                  <div className="flex flex-col gap-2">
-                    <div className="flex flex-wrap gap-2">
-                      {currentConfig!.chips!.map((chip) => (
-                        <Chip
-                          key={chip}
-                          state={chipState(currentConfig!.field, chip)}
-                          onClick={() => handleChipTap(chip)}
-                        >
-                          {chip}
-                        </Chip>
-                      ))}
-                    </div>
-                    {canRevealManually && !fieldRevealed && (
-                      <button
-                        onClick={() => setFieldRevealed(true)}
-                        className="self-start text-xs font-medium text-brand hover:underline"
+                  <div className="flex flex-wrap gap-2">
+                    {currentConfig!.chips!.map((chip) => (
+                      <Chip
+                        key={chip}
+                        state={chipState(currentConfig!.field, chip)}
+                        onClick={() => handleChipTap(chip)}
                       >
-                        Type a different answer
-                      </button>
-                    )}
+                        {chip}
+                      </Chip>
+                    ))}
                   </div>
                 )
               )}
@@ -444,26 +437,57 @@ export default function PostVisitRecordPage() {
           )}
         </div>
 
-        {showField && (
-          <div className="flex shrink-0 items-center gap-2 border-t border-border bg-background-chat p-3">
-            <div className="flex flex-1 items-center rounded-pill border border-border bg-white px-4">
+        {isAnswering && (
+          <div className="flex shrink-0 items-center gap-2 border-t border-border bg-white p-3">
+            <button
+              type="button"
+              tabIndex={-1}
+              className={cn(
+                "flex h-11 w-11 shrink-0 items-center justify-center rounded-pill transition-colors",
+                showField ? "bg-brand text-white" : "bg-background-chat text-muted"
+              )}
+            >
+              <Paperclip size={18} />
+            </button>
+            <div
+              onClick={revealField}
+              className={cn(
+                "flex flex-1 items-center rounded-pill border px-4 transition-colors",
+                showField ? "border-border bg-white" : "cursor-text border-border bg-background-chat"
+              )}
+            >
               <input
                 ref={inputRef}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
+                onFocus={revealField}
+                readOnly={!showField}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSubmitInput();
                 }}
-                placeholder="Type your own answer..."
-                className="h-11 flex-1 bg-transparent text-sm outline-none placeholder:text-muted"
+                placeholder={showField ? "Type your own answer..." : "Tap a chip, or type here"}
+                className={cn(
+                  "h-11 flex-1 bg-transparent text-sm outline-none placeholder:text-muted",
+                  !showField && "cursor-text text-muted"
+                )}
               />
             </div>
             <button
-              onClick={handleSubmitInput}
-              disabled={!inputValue.trim()}
+              type="button"
+              tabIndex={-1}
               className={cn(
-                "flex h-11 w-11 items-center justify-center rounded-pill text-white transition-colors",
-                inputValue.trim() ? "bg-brand" : "bg-brand/40"
+                "flex h-11 w-11 shrink-0 items-center justify-center rounded-pill transition-colors",
+                showField ? "bg-brand text-white" : "bg-background-chat text-muted"
+              )}
+            >
+              <Mic size={18} />
+            </button>
+            <button
+              onClick={handleSubmitInput}
+              disabled={!showField || !inputValue.trim()}
+              className={cn(
+                "flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-white transition-colors",
+                showField && inputValue.trim() ? "bg-brand" : "bg-brand/40"
               )}
             >
               <ArrowUp size={18} />
