@@ -5,6 +5,14 @@ Blank-canvas prototyping environment for the Head of Product design sprint.
 Not a finished product — a starting point so the actual sprint time goes into
 the brief, not project setup.
 
+## About heva
+
+heva is an AI-native healthcare platform revolutionizing how patients and
+healthcare providers connect globally, making quality care accessible to
+everyone, everywhere. heva's AI-powered tools automate patient engagement,
+scheduling, and payments, allowing providers to focus on providing
+exceptional care while expanding globally.
+
 ## What's here
 
 - Next.js (App Router) + TypeScript + Tailwind, configured with real design
