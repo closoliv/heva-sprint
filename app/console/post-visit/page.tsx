@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState, Fragment } from "react";
 import Link from "next/link";
-import { ChevronLeft, Mic, Paperclip, Sparkles, Stethoscope, Undo2, X } from "lucide-react";
+import { ChevronLeft, Mic, Paperclip, Undo2, X } from "lucide-react";
 import { SendIcon } from "@/components/ui/send-icon";
 import { DashboardShell } from "@/components/console/dashboard-shell";
 import { PatientAvatarCard, PatientInfoSection } from "@/components/console/patient-overview";
+import { HevaAvatar, ProviderAvatar } from "@/components/console/chat-avatars";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -154,22 +155,6 @@ ${redFlagLines}
 📅 Next check-in: ${record.followUp}
 
 Questions? Message us here anytime.`;
-}
-
-function HevaAvatar() {
-  return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-pill bg-brand text-white">
-      <Sparkles size={16} strokeWidth={2} />
-    </div>
-  );
-}
-
-function ProviderAvatar() {
-  return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border border-border bg-white text-slate">
-      <Stethoscope size={16} strokeWidth={1.8} />
-    </div>
-  );
 }
 
 function SystemBubble({ children }: { children: React.ReactNode }) {

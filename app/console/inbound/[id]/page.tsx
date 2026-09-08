@@ -4,12 +4,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DashboardShell } from "@/components/console/dashboard-shell";
 import { PatientAvatarCard, PatientInfoSection } from "@/components/console/patient-overview";
+import { HevaAvatar, PatientAvatar } from "@/components/console/chat-avatars";
+import { ChatInputBar } from "@/components/console/chat-input-bar";
 import { PATIENTS, PLACEHOLDER_PATIENT, type ChatMessage } from "@/lib/patients";
 
 function ChatBubble({ message }: { message: ChatMessage }) {
   if (message.from === "heva") {
     return (
-      <div className="flex justify-start">
+      <div className="flex items-end justify-start gap-2">
+        <HevaAvatar />
         <div className="max-w-[80%] rounded-lg border border-border bg-white p-3 text-sm text-foreground">
           {message.text}
         </div>
@@ -17,8 +20,9 @@ function ChatBubble({ message }: { message: ChatMessage }) {
     );
   }
   return (
-    <div className="flex justify-end">
+    <div className="flex items-end justify-end gap-2">
       <div className="max-w-[80%] rounded-lg bg-brand p-3 text-sm text-white">{message.text}</div>
+      <PatientAvatar />
     </div>
   );
 }
@@ -91,10 +95,13 @@ export default function PatientFilePage({ params }: { params: { id: string } }) 
               {patient.chatThread.length === 0 ? (
                 <p className="mt-3 text-sm text-muted">No conversation on file.</p>
               ) : (
-                <div className="mt-3 space-y-3 rounded-lg border border-border bg-white p-4">
-                  {patient.chatThread.map((m, i) => (
-                    <ChatBubble key={i} message={m} />
-                  ))}
+                <div className="mt-3 overflow-hidden rounded-lg border border-border bg-white">
+                  <div className="space-y-3 p-4">
+                    {patient.chatThread.map((m, i) => (
+                      <ChatBubble key={i} message={m} />
+                    ))}
+                  </div>
+                  <ChatInputBar />
                 </div>
               )}
             </div>
