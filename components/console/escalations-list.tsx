@@ -102,7 +102,7 @@ function StatusBadge({ status }: { status: "attention" | "in_progress" | "resolv
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-pill bg-background-chat px-2.5 py-1 text-xs font-medium text-slate">
+    <span className="inline-flex items-center gap-1 rounded-pill bg-green-50 px-2.5 py-1 text-xs font-medium text-green-600">
       <CheckCircle2 size={12} />
       Resolved
     </span>

@@ -34,7 +34,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     <div className="flex h-dvh bg-white">
       <aside className="flex w-16 shrink-0 flex-col gap-4 border-r border-border bg-background-chat p-2 md:w-64 md:p-4">
         <Link href="/" className="flex items-center justify-center gap-2 px-1 py-2 md:justify-start md:px-2">
-          <div className="h-7 w-7 shrink-0 rounded-md bg-brand" aria-hidden />
+          <img src="/heva-icon.svg" alt="heva" width={28} height={28} className="h-7 w-7 shrink-0" />
           <span className="hidden text-lg font-semibold text-foreground md:inline">heva</span>
         </Link>
 

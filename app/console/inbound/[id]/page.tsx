@@ -29,7 +29,7 @@ export default function PatientFilePage({ params }: { params: { id: string } }) 
 
   return (
     <DashboardShell>
-      <div className="space-y-6 p-4 sm:p-8">
+      <div className="min-h-full space-y-6 bg-background-chat p-4 sm:p-8">
         {patient.record.status === "due" && (
           <div className="flex flex-col items-start justify-between gap-4 rounded-lg border border-red-100 bg-red-50 p-4 sm:flex-row sm:items-center">
             <div className="flex items-start gap-3">
@@ -71,7 +71,7 @@ export default function PatientFilePage({ params }: { params: { id: string } }) 
                       <p className="mt-0.5 text-sm text-muted">{a.date}</p>
                     </div>
                     {a.status === "completed" ? (
-                      <span className="inline-flex shrink-0 items-center gap-1 rounded-pill bg-background-chat px-2.5 py-1 text-xs font-medium text-slate">
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-pill bg-green-50 px-2.5 py-1 text-xs font-medium text-green-600">
                         <CheckCircle2 size={12} />
                         Completed
                       </span>
@@ -101,7 +101,7 @@ export default function PatientFilePage({ params }: { params: { id: string } }) 
 
             {patient.record.status === "sent" && (
               <Card className="flex items-center gap-3">
-                <CheckCircle2 size={18} className="shrink-0 text-brand" />
+                <CheckCircle2 size={18} className="shrink-0 text-green-600" />
                 <div>
                   <h2 className="text-sm font-semibold text-foreground">Post-visit record</h2>
                   <p className="mt-1 text-sm text-muted">Sent via WhatsApp · {patient.record.sentDate}</p>

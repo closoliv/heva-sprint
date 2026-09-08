@@ -45,7 +45,7 @@ export default function InboundPage() {
                       {item.status}
                     </Badge>
                   ) : (
-                    <Badge className="shrink-0">
+                    <Badge className="shrink-0 bg-green-50 text-green-600">
                       <CheckCircle2 size={12} className="mr-1" />
                       {item.status}
                     </Badge>
