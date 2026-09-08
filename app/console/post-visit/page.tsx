@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, Fragment } from "react";
-import { ArrowUp, Mic, Paperclip, Undo2, X } from "lucide-react";
+import { Mic, Paperclip, Undo2, X } from "lucide-react";
+import { SendIcon } from "@/components/ui/send-icon";
 import { NavShell } from "@/components/nav-shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -483,14 +484,13 @@ export default function PostVisitRecordPage() {
               <Mic size={18} />
             </button>
             <button
+              type="button"
               onClick={handleSubmitInput}
               disabled={!showField || !inputValue.trim()}
-              className={cn(
-                "flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-white transition-colors",
-                showField && inputValue.trim() ? "bg-brand" : "bg-brand/40"
-              )}
+              aria-label="Send"
+              className="h-8 w-12 shrink-0 disabled:opacity-50"
             >
-              <ArrowUp size={18} />
+              <SendIcon className="h-full w-full" />
             </button>
           </div>
         )}
