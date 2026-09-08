@@ -311,17 +311,17 @@ export default function PostVisitRecordPage() {
           ))}
 
           {isAnswering && (
-            <>
-              <SystemBubble>{STEP_CONFIG[currentStepId].prompt()}</SystemBubble>
+            <div className="flex justify-start">
+              <div className="max-w-[85%] rounded-lg border border-border bg-white p-3">
+                <p className="text-sm text-foreground">{STEP_CONFIG[currentStepId].prompt()}</p>
 
-              {currentStepId === "red_flags" ? (
-                <div className="flex justify-start">
-                  <div className="w-full max-w-[85%] space-y-3 rounded-lg border border-border bg-white p-3">
+                {currentStepId === "red_flags" ? (
+                  <div className="mt-3 space-y-3">
                     <ul className="space-y-2">
                       {record.redFlags.map((f) => (
                         <li
                           key={f}
-                          className="flex items-start gap-2 rounded-pill border border-border bg-white px-3 py-2 text-sm text-foreground"
+                          className="flex items-start gap-2 rounded-pill border border-border bg-background-chat px-3 py-2 text-sm text-foreground"
                         >
                           <span className="flex-1">{f}</span>
                           <button
@@ -341,23 +341,23 @@ export default function PostVisitRecordPage() {
                       Continue →
                     </Button>
                   </div>
-                </div>
-              ) : (
-                stepHasChips && (
-                  <div className="flex flex-wrap gap-2">
-                    {currentConfig!.chips!.map((chip) => (
-                      <Chip
-                        key={chip}
-                        state={chipState(currentConfig!.field, chip)}
-                        onClick={() => handleChipTap(chip)}
-                      >
-                        {chip}
-                      </Chip>
-                    ))}
-                  </div>
-                )
-              )}
-            </>
+                ) : (
+                  stepHasChips && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {currentConfig!.chips!.map((chip) => (
+                        <Chip
+                          key={chip}
+                          state={chipState(currentConfig!.field, chip)}
+                          onClick={() => handleChipTap(chip)}
+                        >
+                          {chip}
+                        </Chip>
+                      ))}
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
           )}
 
           {currentStepId === "preview" && (
