@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, Fragment } from "react";
 import Link from "next/link";
-import { ChevronLeft, Mic, Paperclip, Undo2, X } from "lucide-react";
+import { ChevronLeft, Mic, Paperclip, Sparkles, Stethoscope, Undo2, X } from "lucide-react";
 import { SendIcon } from "@/components/ui/send-icon";
 import { DashboardShell } from "@/components/console/dashboard-shell";
 import { Card } from "@/components/ui/card";
@@ -152,9 +152,26 @@ ${redFlagLines}
 Questions? Message us here anytime.`;
 }
 
+function HevaAvatar() {
+  return (
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-pill bg-brand text-white">
+      <Sparkles size={16} strokeWidth={2} />
+    </div>
+  );
+}
+
+function ProviderAvatar() {
+  return (
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border border-border bg-white text-slate">
+      <Stethoscope size={16} strokeWidth={1.8} />
+    </div>
+  );
+}
+
 function SystemBubble({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex justify-start">
+    <div className="flex items-end justify-start gap-2">
+      <HevaAvatar />
       <div className="max-w-[85%] rounded-lg border border-border bg-white p-3 text-sm text-foreground">
         {children}
       </div>
@@ -164,8 +181,9 @@ function SystemBubble({ children }: { children: React.ReactNode }) {
 
 function ProviderBubble({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex justify-end">
+    <div className="flex items-end justify-end gap-2">
       <div className="max-w-[85%] rounded-lg bg-brand p-3 text-sm text-white">{children}</div>
+      <ProviderAvatar />
     </div>
   );
 }
@@ -343,7 +361,8 @@ export default function PostVisitRecordPage() {
           ))}
 
           {isAnswering && (
-            <div className="flex justify-start">
+            <div className="flex items-end justify-start gap-2">
+              <HevaAvatar />
               <div className="max-w-[85%] rounded-lg border border-border bg-white p-3">
                 <p className="text-sm text-foreground">{STEP_CONFIG[currentStepId].prompt()}</p>
 
