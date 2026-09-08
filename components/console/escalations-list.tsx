@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CheckCircle2 } from "lucide-react";
 
 const escalations = [
   {
@@ -15,9 +16,65 @@ const escalations = [
     time: "Yesterday",
     status: "in_progress" as const,
   },
+  {
+    href: null,
+    patient: "Elena Vasquez",
+    detail: "Meniscus repair · missed 2-week check-in",
+    time: "2 days ago",
+    status: "attention" as const,
+  },
+  {
+    href: null,
+    patient: "Marcus Webb",
+    detail: "Rotator cuff repair · payment dispute on final invoice",
+    time: "3 days ago",
+    status: "in_progress" as const,
+  },
+  {
+    href: null,
+    patient: "Priya Nair",
+    detail: "Knee arthroscopy · patient reports numbness in toes",
+    time: "3 days ago",
+    status: "attention" as const,
+  },
+  {
+    href: null,
+    patient: "Tomás Herrera",
+    detail: "ACL reconstruction · brace fit complaint, replacement shipped",
+    time: "4 days ago",
+    status: "in_progress" as const,
+  },
+  {
+    href: null,
+    patient: "Grace Kim",
+    detail: "Meniscus repair · missed suture-check appointment",
+    time: "5 days ago",
+    status: "attention" as const,
+  },
+  {
+    href: null,
+    patient: "Daniel Osei",
+    detail: "Knee arthroscopy · insurance pre-authorization delay",
+    time: "6 days ago",
+    status: "resolved" as const,
+  },
+  {
+    href: null,
+    patient: "Lucía Fernández",
+    detail: "ACL reconstruction · swelling resolved after follow-up call",
+    time: "1 week ago",
+    status: "resolved" as const,
+  },
+  {
+    href: null,
+    patient: "Omar Haddad",
+    detail: "Rotator cuff repair · payment dispute closed, refund issued",
+    time: "1 week ago",
+    status: "resolved" as const,
+  },
 ];
 
-function StatusBadge({ status }: { status: "attention" | "in_progress" }) {
+function StatusBadge({ status }: { status: "attention" | "in_progress" | "resolved" }) {
   if (status === "attention") {
     return (
       <span className="inline-flex items-center gap-1.5 rounded-pill bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600">
@@ -26,9 +83,17 @@ function StatusBadge({ status }: { status: "attention" | "in_progress" }) {
       </span>
     );
   }
+  if (status === "in_progress") {
+    return (
+      <span className="inline-flex items-center rounded-pill bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand">
+        In progress
+      </span>
+    );
+  }
   return (
-    <span className="inline-flex items-center rounded-pill bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand">
-      In progress
+    <span className="inline-flex items-center gap-1 rounded-pill bg-background-chat px-2.5 py-1 text-xs font-medium text-slate">
+      <CheckCircle2 size={12} />
+      Resolved
     </span>
   );
 }
