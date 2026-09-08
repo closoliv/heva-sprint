@@ -1,22 +1,22 @@
 import Link from "next/link";
-import { CheckCircle2, Clock, ListFilter, Search, ChevronDown } from "lucide-react";
+import { CheckCircle2, MessageCircleMore, ListFilter, Search, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { INBOUND } from "@/lib/inbound";
+import { INBOUND, type InboundStatus } from "@/lib/inbound";
 import { ChannelCell } from "@/components/console/escalations-list";
 
-function StatusBadge({ status }: { status: "record_due" | "record_sent" }) {
-  if (status === "record_due") {
+function StatusBadge({ status }: { status: InboundStatus }) {
+  if (status === "new_inquiry") {
     return (
       <span className="inline-flex items-center gap-1 rounded-pill bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand">
-        <Clock size={12} />
-        Post-visit record due
+        <MessageCircleMore size={12} />
+        New inquiry
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1 rounded-pill bg-green-50 px-2.5 py-1 text-xs font-medium text-green-600">
       <CheckCircle2 size={12} />
-      Record sent
+      Consultation booked
     </span>
   );
 }

@@ -7,10 +7,7 @@ export default function ConsoleDashboard() {
       <div className="space-y-6 p-4 sm:p-8">
         <div>
           <h1 className="text-3xl font-semibold text-foreground">Escalations</h1>
-          <p className="mt-1 text-sm text-muted">
-            Cases flagged for review — a missed check-in, a patient-reported red flag, or a payment
-            dispute.
-          </p>
+          <p className="mt-1 text-sm text-muted">Cases prioritized for your review and action.</p>
         </div>
         <EscalationsList />
       </div>
