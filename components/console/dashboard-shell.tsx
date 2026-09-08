@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ESCALATIONS_NEEDING_ATTENTION } from "@/lib/escalations";
+import { INBOUND_COUNT } from "@/lib/inbound";
 
 type NavItem = {
   label: string;
@@ -34,6 +35,7 @@ const navItems: NavItem[] = [
     icon: Inbox,
     href: "/console/inbound",
     match: (p) => p.startsWith("/console/inbound") || p.startsWith("/console/post-visit"),
+    count: INBOUND_COUNT,
   },
   {
     label: "Escalations",
@@ -66,8 +68,8 @@ function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
   const { label, icon: Icon, href, match, count = 0 } = item;
   const active = match ? match(pathname) : false;
   const rowClasses = cn(
-    "flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors md:justify-start",
-    active ? "bg-brand-50 text-brand" : href ? "text-foreground hover:bg-white" : "cursor-default text-muted"
+    "flex cursor-pointer items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors md:justify-start",
+    active ? "bg-brand-50 text-brand" : "text-foreground hover:bg-white"
   );
   const content = (
     <>

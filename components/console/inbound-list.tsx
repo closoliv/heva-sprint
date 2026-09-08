@@ -1,43 +1,27 @@
 import Link from "next/link";
-import { CheckCircle2, Instagram, ListFilter, MessageCircle, Search, ChevronDown } from "lucide-react";
+import { CheckCircle2, Clock, ListFilter, Search, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ESCALATIONS } from "@/lib/escalations";
+import { INBOUND } from "@/lib/inbound";
+import { ChannelCell } from "@/components/console/escalations-list";
 
-function StatusBadge({ status }: { status: "attention" | "in_progress" | "resolved" }) {
-  if (status === "attention") {
+function StatusBadge({ status }: { status: "record_due" | "record_sent" }) {
+  if (status === "record_due") {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-pill bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600">
-        <span className="h-1.5 w-1.5 shrink-0 rounded-pill bg-red-600" aria-hidden />
-        Needs attention
-      </span>
-    );
-  }
-  if (status === "in_progress") {
-    return (
-      <span className="inline-flex items-center rounded-pill bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand">
-        In progress
+      <span className="inline-flex items-center gap-1 rounded-pill bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand">
+        <Clock size={12} />
+        Post-visit record due
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1 rounded-pill bg-green-50 px-2.5 py-1 text-xs font-medium text-green-600">
       <CheckCircle2 size={12} />
-      Resolved
+      Record sent
     </span>
   );
 }
 
-export function ChannelCell({ channel }: { channel: "WhatsApp" | "Instagram" }) {
-  const Icon = channel === "WhatsApp" ? MessageCircle : Instagram;
-  return (
-    <span className="inline-flex items-center gap-1.5 text-slate">
-      <Icon size={15} className="shrink-0 text-muted" />
-      {channel}
-    </span>
-  );
-}
-
-export function EscalationsList() {
+export function InboundList() {
   return (
     <div className="space-y-3">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -71,24 +55,24 @@ export function EscalationsList() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {ESCALATIONS.map((e) => (
-                <tr key={e.patient} className={cn(e.href && "hover:bg-background-chat")}>
+              {INBOUND.map((i) => (
+                <tr key={i.patient} className={cn(i.href && "hover:bg-background-chat")}>
                   <td className="px-4 py-3 font-medium">
-                    {e.href ? (
-                      <Link href={e.href} className="text-brand hover:underline">
-                        {e.patient}
+                    {i.href ? (
+                      <Link href={i.href} className="text-brand hover:underline">
+                        {i.patient}
                       </Link>
                     ) : (
-                      <span className="cursor-pointer text-brand hover:underline">{e.patient}</span>
+                      <span className="cursor-pointer text-brand hover:underline">{i.patient}</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <ChannelCell channel={e.channel} />
+                    <ChannelCell channel={i.channel} />
                   </td>
-                  <td className="px-4 py-3 text-slate">{e.appointmentDate}</td>
-                  <td className="px-4 py-3 text-slate">{e.procedure}</td>
+                  <td className="px-4 py-3 text-slate">{i.appointmentDate}</td>
+                  <td className="px-4 py-3 text-slate">{i.procedure}</td>
                   <td className="px-4 py-3">
-                    <StatusBadge status={e.status} />
+                    <StatusBadge status={i.status} />
                   </td>
                 </tr>
               ))}
@@ -98,8 +82,8 @@ export function EscalationsList() {
 
         <div className="flex flex-col items-center justify-between gap-3 border-t border-border bg-white px-4 py-3 text-sm sm:flex-row">
           <p className="text-muted">
-            Showing <span className="font-medium text-foreground">1–{ESCALATIONS.length}</span> of{" "}
-            <span className="font-medium text-foreground">{ESCALATIONS.length}</span> escalations
+            Showing <span className="font-medium text-foreground">1–{INBOUND.length}</span> of{" "}
+            <span className="font-medium text-foreground">{INBOUND.length}</span> patients
           </p>
           <div className="flex items-center gap-2">
             <button

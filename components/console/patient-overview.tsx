@@ -14,7 +14,7 @@ export function PatientAvatarCard({
   const Heading = as;
   return (
     <Card className="flex flex-col items-center gap-2 text-center">
-      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-pill bg-brand" aria-hidden>
+      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-pill bg-blue-400" aria-hidden>
         <User size={28} strokeWidth={1.8} className="text-white" />
       </div>
       <div>
