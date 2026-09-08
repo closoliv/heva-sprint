@@ -18,6 +18,7 @@ type StepId =
   | "outcome_note"
   | "weight_bearing"
   | "brace"
+  | "physical_therapy"
   | "red_flags"
   | "follow_up";
 
@@ -27,6 +28,7 @@ type Record_ = {
   outcomeNote: string;
   weightBearing: string;
   brace: string;
+  physicalTherapy: string;
   redFlags: string[];
   followUp: string;
 };
@@ -44,6 +46,7 @@ const EMPTY_RECORD: Record_ = {
   outcomeNote: "",
   weightBearing: "",
   brace: "",
+  physicalTherapy: "",
   redFlags: DEFAULT_RED_FLAGS,
   followUp: "",
 };
@@ -91,6 +94,21 @@ const STEP_CONFIG: Record<StepId, StepConfig> = {
     field: "brace",
     defaultValue: "Locked in extension, remove around 2 weeks",
   },
+  // Options grounded in Phase 1 (0-4 weeks) of the provided ACL Reconstruction
+  // Guidelines — the two branch on whether a meniscus repair was also done,
+  // which changes the ROM restriction per that protocol.
+  physical_therapy: {
+    prompt: () => "Physical therapy plan for the next few weeks?",
+    chips: [
+      "Start PT this week — quad sets, ROM as tolerated, no forced flexion. Avoid prolonged standing/walking.",
+      "Start PT this week — quad sets, ROM limited to 0–90° for the first 2 weeks (meniscus repair), no forced flexion.",
+      "Custom",
+    ],
+    customChips: ["Custom"],
+    field: "physicalTherapy",
+    defaultValue:
+      "Start PT this week — quad sets, ROM as tolerated, no forced flexion. Avoid prolonged standing/walking.",
+  },
   red_flags: {
     prompt: () =>
       `Here's the standard list of things that should prompt ${PATIENT_FIRST_NAME} to contact you or seek care right away — edit as needed:`,
@@ -107,7 +125,7 @@ const STEP_CONFIG: Record<StepId, StepConfig> = {
 function getStepSequence(record: Record_): StepId[] {
   const seq: StepId[] = ["graft_type", "outcome"];
   if (record.outcome === "Noted a complication") seq.push("outcome_note");
-  seq.push("weight_bearing", "brace", "red_flags", "follow_up");
+  seq.push("weight_bearing", "brace", "physical_therapy", "red_flags", "follow_up");
   return seq;
 }
 
@@ -123,6 +141,7 @@ with Dr. ${PROVIDER_LAST_NAME} today:
 What to do:
 - ${record.weightBearing}
 - ${record.brace}
+- ${record.physicalTherapy}
 
 ⚠️ Contact us right away if you notice:
 ${redFlagLines}
@@ -384,6 +403,7 @@ export default function PostVisitRecordPage() {
                     <ul className="list-disc pl-4">
                       <li>{record.weightBearing}</li>
                       <li>{record.brace}</li>
+                      <li>{record.physicalTherapy}</li>
                     </ul>
                   </dd>
                 </div>
