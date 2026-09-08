@@ -9,7 +9,7 @@ export default function Home() {
         <div>
           <h1 className="text-3xl font-semibold text-foreground">Portable Record</h1>
           <p className="mt-1 text-sm text-muted">
-            Post-visit record creation, from provider chat to patient WhatsApp message.
+            Two live demos from the sprint, plus the underlying pattern library.
           </p>
         </div>
         <div className="space-y-2">
@@ -18,8 +18,13 @@ export default function Home() {
               Post-visit record
             </Button>
           </Link>
-          <Link href="/design-system" className="block">
+          <Link href="/practice/27" className="block">
             <Button variant="brand" className="w-full">
+              Practice profile
+            </Button>
+          </Link>
+          <Link href="/design-system" className="block">
+            <Button variant="outline" className="w-full">
               Design system
             </Button>
           </Link>
