@@ -41,7 +41,7 @@ export function NavShell({
     <div className="flex h-dvh flex-col bg-white">
       <header className="flex shrink-0 items-center gap-3 border-b border-border px-4 py-3 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2">
-          <div className="h-7 w-7 shrink-0 rounded-md bg-brand" aria-hidden />
+          <img src="/heva-icon.svg" alt="heva" width={28} height={28} className="h-7 w-7 shrink-0" />
           <span className="text-lg font-semibold text-foreground">heva</span>
         </Link>
 
