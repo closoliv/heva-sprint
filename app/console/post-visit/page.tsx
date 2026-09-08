@@ -5,13 +5,16 @@ import Link from "next/link";
 import { ChevronLeft, Mic, Paperclip, Sparkles, Stethoscope, Undo2, X } from "lucide-react";
 import { SendIcon } from "@/components/ui/send-icon";
 import { DashboardShell } from "@/components/console/dashboard-shell";
+import { PatientAvatarCard, PatientInfoSection } from "@/components/console/patient-overview";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { PATIENTS } from "@/lib/patients";
 
 // Demo constants — spec uses "[Patient]" / "Dr. [Provider last name]" placeholders.
 const PATIENT_FIRST_NAME = "Sofía";
 const PROVIDER_LAST_NAME = "Bianchi";
+const PATIENT = PATIENTS["sofia-ramirez"];
 
 type StepId =
   | "graft_type"
@@ -347,204 +350,215 @@ export default function PostVisitRecordPage() {
           )}
         </div>
 
-        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4">
-          <SystemBubble>
-            Nice work finishing up with {PATIENT_FIRST_NAME}&apos;s ACL reconstruction. Let&apos;s get
-            their post-visit record ready — takes about a minute.
-          </SystemBubble>
+        <div className="flex flex-1 overflow-hidden">
+          {/* Quick-reference panel */}
+          <aside className="hidden w-72 shrink-0 space-y-4 overflow-y-auto border-r border-border bg-background-chat p-4 lg:block">
+            <PatientAvatarCard name={PATIENT.name} demographics={PATIENT.demographics} />
+            <PatientInfoSection title="General info" rows={PATIENT.generalInfo} />
+            <PatientInfoSection title="Contact info" rows={PATIENT.contactInfo} />
+          </aside>
 
-          {history.map((stepId, i) => (
-            <Fragment key={`${stepId}-${i}`}>
-              <SystemBubble>{STEP_CONFIG[stepId].prompt()}</SystemBubble>
-              <ProviderBubble>{answerDisplay(stepId, record)}</ProviderBubble>
-            </Fragment>
-          ))}
-
-          {isAnswering && (
-            <div className="flex items-end justify-start gap-2">
-              <HevaAvatar />
-              <div className="max-w-[85%] rounded-lg border border-border bg-white p-3">
-                <p className="text-sm text-foreground">{STEP_CONFIG[currentStepId].prompt()}</p>
-
-                {currentStepId === "red_flags" ? (
-                  <div className="mt-3 space-y-3">
-                    <ul className="space-y-2">
-                      {record.redFlags.map((f) => (
-                        <li
-                          key={f}
-                          className="flex items-start gap-2 rounded-pill border border-border bg-background-chat px-3 py-2 text-sm text-foreground"
-                        >
-                          <span className="flex-1">{f}</span>
-                          <button
-                            onClick={() => handleRemoveRedFlag(f)}
-                            aria-label="Remove"
-                            className="mt-0.5 shrink-0 text-muted hover:text-foreground"
+          <div className="flex min-w-0 flex-1 flex-col">
+          <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4">
+            <SystemBubble>
+              Nice work finishing up with {PATIENT_FIRST_NAME}&apos;s ACL reconstruction. Let&apos;s get
+              their post-visit record ready — takes about a minute.
+            </SystemBubble>
+  
+            {history.map((stepId, i) => (
+              <Fragment key={`${stepId}-${i}`}>
+                <SystemBubble>{STEP_CONFIG[stepId].prompt()}</SystemBubble>
+                <ProviderBubble>{answerDisplay(stepId, record)}</ProviderBubble>
+              </Fragment>
+            ))}
+  
+            {isAnswering && (
+              <div className="flex items-end justify-start gap-2">
+                <HevaAvatar />
+                <div className="max-w-[85%] rounded-lg border border-border bg-white p-3">
+                  <p className="text-sm text-foreground">{STEP_CONFIG[currentStepId].prompt()}</p>
+  
+                  {currentStepId === "red_flags" ? (
+                    <div className="mt-3 space-y-3">
+                      <ul className="space-y-2">
+                        {record.redFlags.map((f) => (
+                          <li
+                            key={f}
+                            className="flex items-start gap-2 rounded-pill border border-border bg-background-chat px-3 py-2 text-sm text-foreground"
                           >
-                            <X size={14} />
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="text-xs text-muted">
-                      Type below to add another, or continue when the list looks right.
-                    </p>
-                    <Button variant="ghost" size="sm" onClick={handleContinueRedFlags}>
-                      Continue →
-                    </Button>
-                  </div>
-                ) : (
-                  stepHasChips && (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {currentConfig!.chips!.map((chip) => (
-                        <Chip
-                          key={chip}
-                          state={chipState(currentConfig!.field, chip)}
-                          onClick={() => handleChipTap(chip)}
-                        >
-                          {chip}
-                        </Chip>
-                      ))}
+                            <span className="flex-1">{f}</span>
+                            <button
+                              onClick={() => handleRemoveRedFlag(f)}
+                              aria-label="Remove"
+                              className="mt-0.5 shrink-0 text-muted hover:text-foreground"
+                            >
+                              <X size={14} />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="text-xs text-muted">
+                        Type below to add another, or continue when the list looks right.
+                      </p>
+                      <Button variant="ghost" size="sm" onClick={handleContinueRedFlags}>
+                        Continue →
+                      </Button>
                     </div>
-                  )
-                )}
+                  ) : (
+                    stepHasChips && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {currentConfig!.chips!.map((chip) => (
+                          <Chip
+                            key={chip}
+                            state={chipState(currentConfig!.field, chip)}
+                            onClick={() => handleChipTap(chip)}
+                          >
+                            {chip}
+                          </Chip>
+                        ))}
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-
-          {currentStepId === "preview" && (
-            <Card elevated className="space-y-4">
-              <div>
-                <h2 className="text-lg font-semibold text-foreground">Post-visit record</h2>
-                <p className="text-sm text-muted">ACL reconstruction · {record.graftType}</p>
-              </div>
-
-              <dl className="space-y-3 text-sm">
+            )}
+  
+            {currentStepId === "preview" && (
+              <Card elevated className="space-y-4">
                 <div>
-                  <dt className="font-medium text-foreground">How it went</dt>
-                  <dd className="text-slate">
-                    {record.outcome}
-                    {record.outcome === "Noted a complication" && record.outcomeNote && (
-                      <span className="block text-muted">{record.outcomeNote}</span>
-                    )}
-                  </dd>
+                  <h2 className="text-lg font-semibold text-foreground">Post-visit record</h2>
+                  <p className="text-sm text-muted">ACL reconstruction · {record.graftType}</p>
                 </div>
-                <div>
-                  <dt className="font-medium text-foreground">What to do</dt>
-                  <dd className="text-slate">
-                    <ul className="list-disc pl-4">
-                      <li>{record.weightBearing}</li>
-                      <li>{record.brace}</li>
-                      <li>{record.physicalTherapy}</li>
-                    </ul>
-                  </dd>
-                </div>
-                <div>
-                  <dt className="font-medium text-foreground">Contact us right away if</dt>
-                  <dd className="text-slate">
-                    <ul className="list-disc pl-4">
-                      {record.redFlags.map((f) => (
-                        <li key={f}>{f}</li>
-                      ))}
-                    </ul>
-                  </dd>
-                </div>
-                <div>
-                  <dt className="font-medium text-foreground">Next check-in</dt>
-                  <dd className="text-slate">{record.followUp}</dd>
-                </div>
-              </dl>
-
-              <div className="space-y-2 pt-2">
-                <Button variant="brand" className="w-full" onClick={handleEdit}>
-                  Edit
-                </Button>
-                <Button variant="primary" className="w-full" onClick={() => setStatus("sent")}>
-                  Send to {PATIENT_FIRST_NAME}
-                </Button>
-              </div>
-            </Card>
-          )}
-
-          {currentStepId === "sent" && (
-            <div className="space-y-4">
-              <SystemBubble>✅ Sent to {PATIENT_FIRST_NAME} via WhatsApp.</SystemBubble>
-
-              <div>
-                <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
-                  What {PATIENT_FIRST_NAME} receives
-                </p>
-                <div className="overflow-hidden rounded-lg border border-border">
-                  <div className="flex items-center gap-2 bg-[#075E54] px-3 py-2">
-                    <div className="h-6 w-6 shrink-0 rounded-pill bg-white/20" aria-hidden />
-                    <span className="text-sm font-medium text-white">heva</span>
+  
+                <dl className="space-y-3 text-sm">
+                  <div>
+                    <dt className="font-medium text-foreground">How it went</dt>
+                    <dd className="text-slate">
+                      {record.outcome}
+                      {record.outcome === "Noted a complication" && record.outcomeNote && (
+                        <span className="block text-muted">{record.outcomeNote}</span>
+                      )}
+                    </dd>
                   </div>
-                  <div className="bg-[#ECE5DD] p-3">
-                    <div className="max-w-[90%] whitespace-pre-line rounded-lg bg-[#DCF8C6] p-3 text-sm text-[#111B21]">
-                      {buildWhatsAppMessage(record)}
+                  <div>
+                    <dt className="font-medium text-foreground">What to do</dt>
+                    <dd className="text-slate">
+                      <ul className="list-disc pl-4">
+                        <li>{record.weightBearing}</li>
+                        <li>{record.brace}</li>
+                        <li>{record.physicalTherapy}</li>
+                      </ul>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-medium text-foreground">Contact us right away if</dt>
+                    <dd className="text-slate">
+                      <ul className="list-disc pl-4">
+                        {record.redFlags.map((f) => (
+                          <li key={f}>{f}</li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-medium text-foreground">Next check-in</dt>
+                    <dd className="text-slate">{record.followUp}</dd>
+                  </div>
+                </dl>
+  
+                <div className="space-y-2 pt-2">
+                  <Button variant="brand" className="w-full" onClick={handleEdit}>
+                    Edit
+                  </Button>
+                  <Button variant="primary" className="w-full" onClick={() => setStatus("sent")}>
+                    Send to {PATIENT_FIRST_NAME}
+                  </Button>
+                </div>
+              </Card>
+            )}
+  
+            {currentStepId === "sent" && (
+              <div className="space-y-4">
+                <SystemBubble>✅ Sent to {PATIENT_FIRST_NAME} via WhatsApp.</SystemBubble>
+  
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
+                    What {PATIENT_FIRST_NAME} receives
+                  </p>
+                  <div className="overflow-hidden rounded-lg border border-border">
+                    <div className="flex items-center gap-2 bg-[#075E54] px-3 py-2">
+                      <div className="h-6 w-6 shrink-0 rounded-pill bg-white/20" aria-hidden />
+                      <span className="text-sm font-medium text-white">heva</span>
+                    </div>
+                    <div className="bg-[#ECE5DD] p-3">
+                      <div className="max-w-[90%] whitespace-pre-line rounded-lg bg-[#DCF8C6] p-3 text-sm text-[#111B21]">
+                        {buildWhatsAppMessage(record)}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-
-        {isAnswering && (
-          <div className="flex shrink-0 items-center gap-2 border-t border-border bg-white p-3">
-            <button
-              type="button"
-              tabIndex={-1}
-              className={cn(
-                "flex h-11 w-11 shrink-0 items-center justify-center rounded-pill transition-colors",
-                showField ? "bg-brand text-white" : "bg-background-chat text-muted"
-              )}
-            >
-              <Paperclip size={18} />
-            </button>
-            <div
-              onClick={revealField}
-              className={cn(
-                "flex flex-1 items-center rounded-pill border px-4 transition-colors",
-                showField ? "border-border bg-white" : "cursor-text border-border bg-background-chat"
-              )}
-            >
-              <input
-                ref={inputRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onFocus={revealField}
-                readOnly={!showField}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSubmitInput();
-                }}
-                placeholder={showField ? "Type your own answer..." : "Tap a chip, or type here"}
-                className={cn(
-                  "h-11 flex-1 bg-transparent text-sm outline-none placeholder:text-muted",
-                  !showField && "cursor-text text-muted"
-                )}
-              />
-            </div>
-            <button
-              type="button"
-              tabIndex={-1}
-              className={cn(
-                "flex h-11 w-11 shrink-0 items-center justify-center rounded-pill transition-colors",
-                showField ? "bg-brand text-white" : "bg-background-chat text-muted"
-              )}
-            >
-              <Mic size={18} />
-            </button>
-            <button
-              type="button"
-              onClick={handleSubmitInput}
-              disabled={!showField || !inputValue.trim()}
-              aria-label="Send"
-              className="h-8 w-12 shrink-0 disabled:opacity-50"
-            >
-              <SendIcon className="h-full w-full" />
-            </button>
+            )}
           </div>
-        )}
+  
+          {isAnswering && (
+            <div className="flex shrink-0 items-center gap-2 border-t border-border bg-white p-3">
+              <button
+                type="button"
+                tabIndex={-1}
+                className={cn(
+                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-pill transition-colors",
+                  showField ? "bg-brand text-white" : "bg-background-chat text-muted"
+                )}
+              >
+                <Paperclip size={18} />
+              </button>
+              <div
+                onClick={revealField}
+                className={cn(
+                  "flex flex-1 items-center rounded-pill border px-4 transition-colors",
+                  showField ? "border-border bg-white" : "cursor-text border-border bg-background-chat"
+                )}
+              >
+                <input
+                  ref={inputRef}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onFocus={revealField}
+                  readOnly={!showField}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSubmitInput();
+                  }}
+                  placeholder={showField ? "Type your own answer..." : "Tap a chip, or type here"}
+                  className={cn(
+                    "h-11 flex-1 bg-transparent text-sm outline-none placeholder:text-muted",
+                    !showField && "cursor-text text-muted"
+                  )}
+                />
+              </div>
+              <button
+                type="button"
+                tabIndex={-1}
+                className={cn(
+                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-pill transition-colors",
+                  showField ? "bg-brand text-white" : "bg-background-chat text-muted"
+                )}
+              >
+                <Mic size={18} />
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmitInput}
+                disabled={!showField || !inputValue.trim()}
+                aria-label="Send"
+                className="h-8 w-12 shrink-0 disabled:opacity-50"
+              >
+                <SendIcon className="h-full w-full" />
+              </button>
+            </div>
+          )}
+          </div>
+        </div>
       </div>
     </DashboardShell>
   );
