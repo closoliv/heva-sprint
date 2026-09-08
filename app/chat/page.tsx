@@ -12,7 +12,7 @@ export default function ChatPage() {
 
   return (
     <NavShell title="Chat">
-      <div className="flex h-[calc(100vh-8.5rem)] flex-col bg-background-chat">
+      <div className="flex h-full flex-col bg-background-chat">
         <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
           <h1 className="text-xl font-semibold text-foreground">What can I help you with?</h1>
           <div className="flex flex-wrap justify-center gap-2">

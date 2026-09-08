@@ -5,7 +5,7 @@ import { NavShell } from "@/components/nav-shell";
 export default function Home() {
   return (
     <NavShell>
-      <div className="flex min-h-[calc(100vh-8.5rem)] flex-col justify-center gap-8 p-4">
+      <div className="flex h-full flex-col justify-center gap-8 p-4">
         <div>
           <h1 className="text-3xl font-semibold text-foreground">Portable Record</h1>
           <p className="mt-1 text-sm text-muted">

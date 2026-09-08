@@ -256,7 +256,7 @@ export default function PostVisitRecordPage() {
 
   return (
     <NavShell title="Post-visit record">
-      <div className="flex h-[calc(100vh-8.5rem)] flex-col bg-background-chat">
+      <div className="flex h-full flex-col bg-background-chat">
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4">
           <SystemBubble>
             Nice work finishing up with {PATIENT_FIRST_NAME}&apos;s ACL reconstruction. Let&apos;s get

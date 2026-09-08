@@ -15,17 +15,17 @@ export function NavShell({ title, children }: { title?: string; children: React.
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-background-chat sm:flex sm:items-center sm:justify-center sm:p-8">
-      <div className="mx-auto flex min-h-screen w-full max-w-app flex-col bg-white sm:min-h-0 sm:max-w-[800px] sm:overflow-hidden sm:rounded-2xl sm:border sm:border-border sm:shadow-subtle">
-        <header className="flex items-center gap-2 border-b border-border px-4 py-3">
+    <div className="h-dvh overflow-hidden bg-background-chat sm:flex sm:items-center sm:justify-center sm:p-8">
+      <div className="mx-auto flex h-dvh w-full max-w-app flex-col bg-white sm:h-[85dvh] sm:max-w-[800px] sm:overflow-hidden sm:rounded-2xl sm:border sm:border-border sm:shadow-subtle">
+        <header className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-3">
           <div className="h-7 w-7 shrink-0 rounded-md bg-brand" aria-hidden />
           <span className="text-lg font-semibold text-foreground">[practice]</span>
           {title && <span className="ml-auto text-sm text-muted">{title}</span>}
         </header>
 
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 overflow-y-auto">{children}</main>
 
-        <nav className="sticky bottom-0 flex border-t border-border bg-white">
+        <nav className="flex shrink-0 border-t border-border bg-white">
           {tabs.map(({ href, label, icon: Icon, match }) => {
             const active = match(pathname);
             return (
