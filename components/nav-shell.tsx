@@ -2,24 +2,45 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessageCircle, Store, UserRound } from "lucide-react";
+import { AlertTriangle, Inbox, MessageCircle, SlidersHorizontal, Store, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const tabs = [
+const patientTabs = [
   { href: "/list/1", label: "Profile", icon: UserRound, match: (p: string) => p.startsWith("/list/") },
   { href: "/list", label: "Store", icon: Store, match: (p: string) => p === "/list" },
   { href: "/chat", label: "Chat", icon: MessageCircle, match: (p: string) => p.startsWith("/chat") },
 ];
 
-export function NavShell({ title, children }: { title?: string; children: React.ReactNode }) {
+const providerTabs = [
+  {
+    href: "/console/inbound",
+    label: "Inbound",
+    icon: Inbox,
+    match: (p: string) => p === "/console/inbound" || p.startsWith("/console/post-visit"),
+  },
+  { href: "/console/escalations", label: "Escalations", icon: AlertTriangle, match: (p: string) => p === "/console/escalations" },
+  { href: "/console/fine-tuning", label: "Fine-tuning", icon: SlidersHorizontal, match: (p: string) => p === "/console/fine-tuning" },
+  { href: "/console/profile", label: "Profile", icon: UserRound, match: (p: string) => p === "/console/profile" },
+];
+
+export function NavShell({
+  title,
+  nav = "patient",
+  children,
+}: {
+  title?: string;
+  nav?: "patient" | "provider";
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
+  const tabs = nav === "provider" ? providerTabs : patientTabs;
 
   return (
     <div className="h-dvh overflow-hidden bg-background-chat sm:flex sm:items-center sm:justify-center sm:p-8">
       <div className="mx-auto flex h-dvh w-full max-w-app flex-col bg-white sm:h-[85dvh] sm:max-w-[800px] sm:overflow-hidden sm:rounded-2xl sm:border sm:border-border sm:shadow-subtle">
         <header className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-3">
           <div className="h-7 w-7 shrink-0 rounded-md bg-brand" aria-hidden />
-          <span className="text-lg font-semibold text-foreground">[practice]</span>
+          <span className="text-lg font-semibold text-foreground">heva</span>
           {title && <span className="ml-auto text-sm text-muted">{title}</span>}
         </header>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, Fragment } from "react";
-import { ArrowUp, X } from "lucide-react";
+import { ArrowUp, Undo2, X } from "lucide-react";
 import { NavShell } from "@/components/nav-shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -50,6 +50,8 @@ const EMPTY_RECORD: Record_ = {
 type StepConfig = {
   prompt: () => string;
   chips?: string[];
+  // Chips that need free text instead of submitting immediately (e.g. "Other", "Custom").
+  customChips?: string[];
   field: keyof Record_;
   defaultValue?: string;
 };
@@ -58,6 +60,7 @@ const STEP_CONFIG: Record<StepId, StepConfig> = {
   graft_type: {
     prompt: () => "Which graft did you use?",
     chips: ["Hamstring autograft", "Patellar tendon autograft", "Allograft", "Other"],
+    customChips: ["Other"],
     field: "graftType",
   },
   outcome: {
@@ -77,6 +80,7 @@ const STEP_CONFIG: Record<StepId, StepConfig> = {
       "Partial weight-bearing",
       "Custom",
     ],
+    customChips: ["Custom"],
     field: "weightBearing",
     defaultValue: "Weight-bearing as tolerated, with crutches",
   },
@@ -94,6 +98,7 @@ const STEP_CONFIG: Record<StepId, StepConfig> = {
   follow_up: {
     prompt: () => `When should ${PATIENT_FIRST_NAME} check back in?`,
     chips: ["2 weeks – suture check", "Custom"],
+    customChips: ["Custom"],
     field: "followUp",
   },
 };
@@ -144,23 +149,17 @@ function ProviderBubble({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Chip({
-  selected,
-  onClick,
-  children,
-}: {
-  selected: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
+type ChipState = "plain" | "suggested" | "selected";
+
+function Chip({ state, onClick, children }: { state: ChipState; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
       onClick={onClick}
       className={cn(
         "rounded-pill border px-4 py-2 text-sm font-medium transition-colors",
-        selected
-          ? "border-brand bg-brand text-white"
-          : "border-border bg-white text-foreground hover:bg-background-chat"
+        state === "selected" && "border-brand bg-brand text-white",
+        state === "suggested" && "border-brand bg-white text-brand hover:bg-brand-50",
+        state === "plain" && "border-border bg-white text-foreground hover:bg-background-chat"
       )}
     >
       {children}
@@ -185,6 +184,7 @@ export default function PostVisitRecordPage() {
   const [record, setRecord] = useState<Record_>(EMPTY_RECORD);
   const [history, setHistory] = useState<StepId[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [fieldRevealed, setFieldRevealed] = useState(false);
   const [status, setStatus] = useState<"draft" | "sent">("draft");
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -193,37 +193,46 @@ export default function PostVisitRecordPage() {
   const currentStepId: StepId | "preview" | "sent" =
     status === "sent" ? "sent" : history.length < sequence.length ? sequence[history.length] : "preview";
 
+  const isAnswering = currentStepId !== "preview" && currentStepId !== "sent";
+  const currentConfig = isAnswering ? STEP_CONFIG[currentStepId] : null;
+  const stepHasChips = !!currentConfig?.chips?.length;
+
   useEffect(() => {
-    if (currentStepId === "preview" || currentStepId === "sent") return;
-    const cfg = STEP_CONFIG[currentStepId];
-    const stored = record[cfg.field];
-    const initial = typeof stored === "string" && stored ? stored : cfg.defaultValue ?? "";
-    setInputValue(initial);
-    inputRef.current?.focus();
+    setInputValue("");
+    setFieldRevealed(!stepHasChips); // steps with no chips (outcome_note) show the field immediately
+    if (!stepHasChips) inputRef.current?.focus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStepId]);
+
+  useEffect(() => {
+    if (fieldRevealed) inputRef.current?.focus();
+  }, [fieldRevealed]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [history, currentStepId]);
 
+  function submitAnswer(stepId: StepId, value: string) {
+    const field = STEP_CONFIG[stepId].field;
+    setRecord((r) => ({ ...r, [field]: value }));
+    setHistory((h) => [...h, stepId]);
+  }
+
   function handleChipTap(chip: string) {
-    if (chip === "Custom") {
+    if (!isAnswering || currentStepId === "red_flags") return;
+    if (currentConfig?.customChips?.includes(chip)) {
       setInputValue("");
-      inputRef.current?.focus();
+      setFieldRevealed(true);
       return;
     }
-    setInputValue(chip);
+    submitAnswer(currentStepId as StepId, chip);
   }
 
   function handleSend() {
-    if (currentStepId === "preview" || currentStepId === "sent") return;
+    if (!isAnswering) return;
     const value = inputValue.trim();
     if (!value) return;
-    const field = STEP_CONFIG[currentStepId].field;
-    setRecord((r) => ({ ...r, [field]: value }));
-    setHistory((h) => [...h, currentStepId]);
-    setInputValue("");
+    submitAnswer(currentStepId as StepId, value);
   }
 
   function handleAddRedFlag() {
@@ -239,7 +248,15 @@ export default function PostVisitRecordPage() {
 
   function handleContinueRedFlags() {
     setHistory((h) => [...h, "red_flags"]);
-    setInputValue("");
+  }
+
+  function handleUndo() {
+    if (history.length === 0) return;
+    const last = history[history.length - 1];
+    setHistory((h) => h.slice(0, -1));
+    if (last !== "red_flags") {
+      setRecord((r) => ({ ...r, [STEP_CONFIG[last].field]: "" }));
+    }
   }
 
   function handleEdit() {
@@ -252,11 +269,31 @@ export default function PostVisitRecordPage() {
     else handleSend();
   }
 
-  const isAnswering = currentStepId !== "preview" && currentStepId !== "sent";
+  function chipState(field: keyof Record_, chip: string): ChipState {
+    const stored = record[field];
+    if (typeof stored === "string" && stored === chip) return "selected";
+    if (!stored && currentConfig?.defaultValue === chip) return "suggested";
+    return "plain";
+  }
+
+  const showField = isAnswering && (currentStepId === "red_flags" || fieldRevealed);
+  const canRevealManually = stepHasChips && !currentConfig?.customChips?.length;
 
   return (
-    <NavShell title="Post-visit record">
+    <NavShell title="Post-visit record" nav="provider">
       <div className="flex h-full flex-col bg-background-chat">
+        {history.length > 0 && currentStepId !== "sent" && (
+          <div className="flex shrink-0 justify-end border-b border-border bg-white px-4 py-2">
+            <button
+              onClick={handleUndo}
+              className="flex items-center gap-1 text-xs font-medium text-brand hover:underline"
+            >
+              <Undo2 size={12} />
+              Undo last answer
+            </button>
+          </div>
+        )}
+
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4">
           <SystemBubble>
             Nice work finishing up with {PATIENT_FIRST_NAME}&apos;s ACL reconstruction. Let&apos;s get
@@ -303,20 +340,27 @@ export default function PostVisitRecordPage() {
                   </div>
                 </div>
               ) : (
-                STEP_CONFIG[currentStepId].chips && (
+                stepHasChips && (
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-wrap gap-2">
-                      {STEP_CONFIG[currentStepId].chips!.map((chip) => (
+                      {currentConfig!.chips!.map((chip) => (
                         <Chip
                           key={chip}
-                          selected={inputValue === chip}
+                          state={chipState(currentConfig!.field, chip)}
                           onClick={() => handleChipTap(chip)}
                         >
                           {chip}
                         </Chip>
                       ))}
                     </div>
-                    <p className="text-xs text-muted">Tap to select, or type your own answer below.</p>
+                    {canRevealManually && !fieldRevealed && (
+                      <button
+                        onClick={() => setFieldRevealed(true)}
+                        className="self-start text-xs font-medium text-brand hover:underline"
+                      >
+                        Type a different answer
+                      </button>
+                    )}
                   </div>
                 )
               )}
@@ -400,8 +444,8 @@ export default function PostVisitRecordPage() {
           )}
         </div>
 
-        {isAnswering && (
-          <div className="flex items-center gap-2 border-t border-border bg-background-chat p-3">
+        {showField && (
+          <div className="flex shrink-0 items-center gap-2 border-t border-border bg-background-chat p-3">
             <div className="flex flex-1 items-center rounded-pill border border-border bg-white px-4">
               <input
                 ref={inputRef}
