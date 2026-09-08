@@ -25,31 +25,28 @@ export default function PracticeProfilePage() {
       <div className="grid grid-cols-1 gap-8 p-4 sm:p-8 lg:grid-cols-[280px_1fr]">
         {/* Left column */}
         <div className="space-y-4">
-          <div className="relative aspect-[0.87/1] w-full overflow-hidden rounded-lg bg-background-chat">
-            {!photoFailed && (
-              <Image
-                src="/dr-bianchi.jpg"
-                alt="Dr. Bianchi"
-                fill
-                className="object-cover"
-                priority
-                onError={() => setPhotoFailed(true)}
-              />
-            )}
+          <div className="relative aspect-[0.87/1] w-full">
+            <div className="absolute inset-0 overflow-hidden rounded-lg bg-background-chat">
+              {!photoFailed && (
+                <Image
+                  src="/dr-bianchi.png"
+                  alt="Dr. Bianchi"
+                  fill
+                  className="object-cover"
+                  priority
+                  onError={() => setPhotoFailed(true)}
+                />
+              )}
+            </div>
+            <Badge className="absolute bottom-3 left-3 bg-brand text-white shadow-subtle">
+              <Star size={12} className="mr-1 fill-white text-white" />
+              Super provider
+            </Badge>
           </div>
 
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Dr. Bianchi</h1>
             <p className="mt-1 text-sm text-muted">Orthopaedic surgery, Sports medicine</p>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <Badge>Verified provider</Badge>
-            <Badge>heva partner</Badge>
-            <Badge className="text-brand">
-              <Star size={12} className="mr-1 fill-brand text-brand" />
-              Super provider
-            </Badge>
           </div>
 
           <div className="space-y-2 text-sm text-slate">
