@@ -34,14 +34,17 @@ const navItems: NavItem[] = [
     label: "Inbound",
     icon: Inbox,
     href: "/console/inbound",
-    match: (p) => p.startsWith("/console/inbound") || p.startsWith("/console/post-visit"),
+    match: (p) => p === "/console/inbound",
     count: INBOUND_COUNT,
   },
   {
     label: "Escalations",
     icon: AlertTriangle,
     href: "/console",
-    match: (p) => p === "/console",
+    // Patient detail pages and the post-visit chat are only ever reached
+    // from the Escalations table (e.g. Sofía Ramírez), so keep the nav
+    // on Escalations while viewing them instead of jumping to Inbound.
+    match: (p) => p === "/console" || p.startsWith("/console/inbound/") || p.startsWith("/console/post-visit"),
     count: ESCALATIONS_NEEDING_ATTENTION,
   },
   {
