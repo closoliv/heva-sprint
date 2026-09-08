@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, Fragment } from "react";
-import { Mic, Paperclip, Undo2, X } from "lucide-react";
+import Link from "next/link";
+import { ChevronLeft, Mic, Paperclip, Undo2, X } from "lucide-react";
 import { SendIcon } from "@/components/ui/send-icon";
-import { NavShell } from "@/components/nav-shell";
+import { DashboardShell } from "@/components/console/dashboard-shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -303,19 +304,30 @@ export default function PostVisitRecordPage() {
   }
 
   return (
-    <NavShell title="Post-visit record" nav="provider">
+    <DashboardShell>
       <div className="flex h-full flex-col bg-white">
-        {history.length > 0 && currentStepId !== "sent" && (
-          <div className="flex shrink-0 justify-end border-b border-border bg-white px-4 py-2">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-white px-4 py-3 sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
+            <Link
+              href="/console/inbound/sofia-ramirez"
+              className="flex shrink-0 items-center gap-1 text-sm text-muted hover:text-foreground"
+            >
+              <ChevronLeft size={16} />
+              <span className="hidden sm:inline">{PATIENT_FIRST_NAME} Ramírez</span>
+            </Link>
+            <span className="hidden text-border sm:inline">|</span>
+            <h1 className="truncate text-sm font-semibold text-foreground">Post-visit record</h1>
+          </div>
+          {history.length > 0 && currentStepId !== "sent" && (
             <button
               onClick={handleUndo}
-              className="flex items-center gap-1 text-xs font-medium text-brand hover:underline"
+              className="flex shrink-0 items-center gap-1 text-xs font-medium text-brand hover:underline"
             >
               <Undo2 size={12} />
               Undo last answer
             </button>
-          </div>
-        )}
+          )}
+        </div>
 
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4">
           <SystemBubble>
@@ -515,6 +527,6 @@ export default function PostVisitRecordPage() {
           </div>
         )}
       </div>
-    </NavShell>
+    </DashboardShell>
   );
 }
