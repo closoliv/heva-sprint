@@ -15,6 +15,7 @@ import { PATIENTS } from "@/lib/patients";
 const PATIENT_FIRST_NAME = "Sofía";
 const PROVIDER_LAST_NAME = "Bianchi";
 const PATIENT = PATIENTS["sofia-ramirez"];
+const PROCEDURE_NAME = PATIENT.generalInfo.find((row) => row.label === "Procedure")?.value ?? "";
 
 type StepId =
   | "graft_type"
@@ -337,7 +338,9 @@ export default function PostVisitRecordPage() {
               <span className="hidden sm:inline">{PATIENT_FIRST_NAME} Ramírez</span>
             </Link>
             <span className="hidden text-border sm:inline">|</span>
-            <h1 className="truncate text-sm font-semibold text-foreground">Post-visit record</h1>
+            <h1 className="truncate text-sm font-semibold text-foreground">
+              Post-visit record for {PROCEDURE_NAME}
+            </h1>
           </div>
           {history.length > 0 && currentStepId !== "sent" && (
             <button
