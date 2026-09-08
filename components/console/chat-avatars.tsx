@@ -18,7 +18,7 @@ export function ProviderAvatar() {
 
 export function PatientAvatar() {
   return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-pill bg-brand text-white">
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-pill bg-blue-400 text-white">
       <User size={16} strokeWidth={1.8} />
     </div>
   );
