@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Clock, MapPin, MessageCircle, Star, Stethoscope, Store } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,17 +15,28 @@ const ABOUT_TEXT =
   "Dr. Bianchi is an orthopaedic surgeon specializing in ACL reconstruction and sports medicine, with over 12 years treating international patients through heva. Trained in minimally invasive arthroscopic techniques, Dr. Bianchi has performed more than 800 ACL reconstructions using hamstring, patellar tendon, and allograft methods tailored to each patient's activity level and recovery goals. Known for thorough post-visit follow-up and same-day care summaries, Dr. Bianchi's practice emphasizes clear communication before, during, and after every procedure — especially important for patients traveling from abroad who need a reliable record to bring home to their local care team.";
 
 const ADDRESS = "Clínica Bianchi, San José, Costa Rica";
-const MAP_EMBED_URL = `https://www.google.com/maps?q=${encodeURIComponent(ADDRESS)}&output=embed`;
 
 export default function PracticeProfilePage() {
   const [aboutExpanded, setAboutExpanded] = useState(false);
+  const [photoFailed, setPhotoFailed] = useState(false);
 
   return (
     <NavShell title="Practice" wide>
       <div className="grid grid-cols-1 gap-8 p-4 sm:p-8 lg:grid-cols-[280px_1fr]">
         {/* Left column */}
         <div className="space-y-4">
-          <div className="aspect-[0.87/1] w-full rounded-lg bg-background-chat" aria-hidden />
+          <div className="relative aspect-[0.87/1] w-full overflow-hidden rounded-lg bg-background-chat">
+            {!photoFailed && (
+              <Image
+                src="/dr-bianchi.jpg"
+                alt="Dr. Bianchi"
+                fill
+                className="object-cover"
+                priority
+                onError={() => setPhotoFailed(true)}
+              />
+            )}
+          </div>
 
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Dr. Bianchi</h1>
@@ -101,14 +113,19 @@ export default function PracticeProfilePage() {
 
           <div>
             <h2 className="text-xl font-semibold text-foreground">Where to find me</h2>
-            <div className="mt-3 overflow-hidden rounded-lg border border-border">
-              <iframe
-                title="Practice location"
-                src={MAP_EMBED_URL}
-                className="h-80 w-full"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+            <div
+              className="relative mt-3 h-80 w-full overflow-hidden rounded-lg border border-border bg-background-chat"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(139,141,145,0.18) 39px, rgba(139,141,145,0.18) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(139,141,145,0.18) 39px, rgba(139,141,145,0.18) 40px)",
+              }}
+            >
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                <MapPin size={32} className="fill-brand-50 text-brand drop-shadow-sm" strokeWidth={1.75} />
+                <span className="rounded-pill border border-border bg-white px-3 py-1 text-xs font-medium text-foreground shadow-subtle">
+                  {ADDRESS}
+                </span>
+              </div>
             </div>
           </div>
         </div>
