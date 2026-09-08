@@ -6,7 +6,7 @@ export function Pill({ className, ...props }: React.ButtonHTMLAttributes<HTMLBut
   return (
     <button
       className={cn(
-        "rounded-pill border border-border bg-white px-4 py-2 text-sm font-medium text-foreground hover:bg-background-chat",
+        "rounded-pill border border-brand bg-white px-4 py-2 text-sm font-medium text-foreground hover:bg-background-chat",
         className
       )}
       {...props}

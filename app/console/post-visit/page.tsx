@@ -159,7 +159,7 @@ function Chip({ state, onClick, children }: { state: ChipState; onClick: () => v
         "rounded-pill border px-4 py-2 text-sm font-medium transition-colors",
         state === "selected" && "border-brand bg-brand text-white",
         state === "suggested" && "border-brand bg-white text-brand hover:bg-brand-50",
-        state === "plain" && "border-border bg-white text-foreground hover:bg-background-chat"
+        state === "plain" && "border-brand bg-white text-foreground hover:bg-background-chat"
       )}
     >
       {children}
