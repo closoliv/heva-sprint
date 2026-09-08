@@ -62,7 +62,7 @@ export default function ConsoleDashboard() {
       </aside>
 
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-3xl space-y-6 p-4 sm:p-8">
+        <div className="mx-auto max-w-5xl space-y-6 p-4 sm:p-8">
           <div>
             <h1 className="text-3xl font-semibold text-foreground">Escalations</h1>
             <p className="mt-1 text-sm text-muted">

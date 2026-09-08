@@ -1,75 +1,86 @@
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Instagram, ListFilter, MessageCircle, Search, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const escalations = [
   {
     href: "/console/inbound/sofia-ramirez",
     patient: "Sofía Ramírez",
-    detail: "ACL reconstruction · post-visit record not yet sent",
-    time: "Today",
+    channel: "WhatsApp" as const,
+    appointmentDate: "Sep 8, 2026",
+    procedure: "ACL reconstruction",
     status: "attention" as const,
   },
   {
     href: null,
     patient: "James Okafor",
-    detail: "Rotator cuff repair · reported mild fever, day 3",
-    time: "Yesterday",
+    channel: "WhatsApp" as const,
+    appointmentDate: "Sep 7, 2026",
+    procedure: "Rotator cuff repair",
     status: "in_progress" as const,
   },
   {
     href: null,
     patient: "Elena Vasquez",
-    detail: "Meniscus repair · missed 2-week check-in",
-    time: "2 days ago",
+    channel: "Instagram" as const,
+    appointmentDate: "Sep 6, 2026",
+    procedure: "Meniscus repair",
     status: "attention" as const,
   },
   {
     href: null,
     patient: "Marcus Webb",
-    detail: "Rotator cuff repair · payment dispute on final invoice",
-    time: "3 days ago",
+    channel: "WhatsApp" as const,
+    appointmentDate: "Sep 5, 2026",
+    procedure: "Rotator cuff repair",
     status: "in_progress" as const,
   },
   {
     href: null,
     patient: "Priya Nair",
-    detail: "Knee arthroscopy · patient reports numbness in toes",
-    time: "3 days ago",
+    channel: "Instagram" as const,
+    appointmentDate: "Sep 5, 2026",
+    procedure: "Knee arthroscopy",
     status: "attention" as const,
   },
   {
     href: null,
     patient: "Tomás Herrera",
-    detail: "ACL reconstruction · brace fit complaint, replacement shipped",
-    time: "4 days ago",
+    channel: "WhatsApp" as const,
+    appointmentDate: "Sep 4, 2026",
+    procedure: "ACL reconstruction",
     status: "in_progress" as const,
   },
   {
     href: null,
     patient: "Grace Kim",
-    detail: "Meniscus repair · missed suture-check appointment",
-    time: "5 days ago",
+    channel: "Instagram" as const,
+    appointmentDate: "Sep 3, 2026",
+    procedure: "Meniscus repair",
     status: "attention" as const,
   },
   {
     href: null,
     patient: "Daniel Osei",
-    detail: "Knee arthroscopy · insurance pre-authorization delay",
-    time: "6 days ago",
+    channel: "WhatsApp" as const,
+    appointmentDate: "Sep 2, 2026",
+    procedure: "Knee arthroscopy",
     status: "resolved" as const,
   },
   {
     href: null,
     patient: "Lucía Fernández",
-    detail: "ACL reconstruction · swelling resolved after follow-up call",
-    time: "1 week ago",
+    channel: "Instagram" as const,
+    appointmentDate: "Sep 1, 2026",
+    procedure: "ACL reconstruction",
     status: "resolved" as const,
   },
   {
     href: null,
     patient: "Omar Haddad",
-    detail: "Rotator cuff repair · payment dispute closed, refund issued",
-    time: "1 week ago",
+    channel: "WhatsApp" as const,
+    appointmentDate: "Sep 1, 2026",
+    procedure: "Rotator cuff repair",
     status: "resolved" as const,
   },
 ];
@@ -98,33 +109,73 @@ function StatusBadge({ status }: { status: "attention" | "in_progress" | "resolv
   );
 }
 
+function ChannelCell({ channel }: { channel: "WhatsApp" | "Instagram" }) {
+  const Icon = channel === "WhatsApp" ? MessageCircle : Instagram;
+  return (
+    <span className="inline-flex items-center gap-1.5 text-slate">
+      <Icon size={15} className="shrink-0 text-muted" />
+      {channel}
+    </span>
+  );
+}
+
 export function EscalationsList() {
   return (
-    <div className="divide-y divide-border overflow-hidden rounded-lg border border-border">
-      {escalations.map((e) => {
-        const content = (
-          <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex items-start gap-3">
-              <div className="h-10 w-10 shrink-0 rounded-pill bg-background-chat" aria-hidden />
-              <div>
-                <p className="text-sm font-semibold text-foreground">{e.patient}</p>
-                <p className="mt-0.5 text-sm text-muted">{e.detail}</p>
-              </div>
-            </div>
-            <div className="flex items-center justify-between gap-2 pl-[52px] sm:flex-col sm:items-end sm:pl-0">
-              <span className="text-xs text-muted">{e.time}</span>
-              <StatusBadge status={e.status} />
-            </div>
-          </div>
-        );
-        return e.href ? (
-          <Link key={e.patient} href={e.href} className="block transition-colors hover:bg-background-chat">
-            {content}
-          </Link>
-        ) : (
-          <div key={e.patient}>{content}</div>
-        );
-      })}
+    <div className="space-y-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2 rounded-pill border border-border bg-white px-3 py-2 sm:max-w-xs sm:flex-1">
+          <Search size={16} className="shrink-0 text-muted" />
+          <input
+            placeholder="Search patients..."
+            className="w-full bg-transparent text-sm outline-none placeholder:text-muted"
+          />
+        </div>
+        <button
+          type="button"
+          className="flex shrink-0 items-center gap-2 rounded-pill border border-border bg-white px-4 py-2 text-sm font-medium text-foreground hover:bg-background-chat"
+        >
+          <ListFilter size={16} className="text-muted" />
+          Filters
+          <ChevronDown size={14} className="text-muted" />
+        </button>
+      </div>
+
+      <div className="overflow-x-auto rounded-lg border border-border">
+        <table className="w-full min-w-[640px] text-left text-sm">
+          <thead>
+            <tr className="border-b border-border bg-background-chat text-xs font-medium uppercase tracking-wide text-muted">
+              <th className="px-4 py-3 font-medium">Patient</th>
+              <th className="px-4 py-3 font-medium">Contact channel</th>
+              <th className="px-4 py-3 font-medium">Appointment date</th>
+              <th className="px-4 py-3 font-medium">Procedure</th>
+              <th className="px-4 py-3 font-medium">Status</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {escalations.map((e) => (
+              <tr key={e.patient} className={cn(e.href && "hover:bg-background-chat")}>
+                <td className="px-4 py-3 font-medium text-foreground">
+                  {e.href ? (
+                    <Link href={e.href} className="text-brand hover:underline">
+                      {e.patient}
+                    </Link>
+                  ) : (
+                    e.patient
+                  )}
+                </td>
+                <td className="px-4 py-3">
+                  <ChannelCell channel={e.channel} />
+                </td>
+                <td className="px-4 py-3 text-slate">{e.appointmentDate}</td>
+                <td className="px-4 py-3 text-slate">{e.procedure}</td>
+                <td className="px-4 py-3">
+                  <StatusBadge status={e.status} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
