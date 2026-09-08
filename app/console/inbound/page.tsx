@@ -6,14 +6,14 @@ import { CheckCircle2, Clock } from "lucide-react";
 
 const items = [
   {
-    href: "/console/post-visit",
+    id: "sofia-ramirez",
     patient: "Sofía Ramírez",
     detail: "ACL reconstruction · completed today",
     status: "Post-visit record due",
     urgent: true,
   },
   {
-    href: null,
+    id: "marcus-webb",
     patient: "Marcus Webb",
     detail: "Rotator cuff repair · follow-up scheduled",
     status: "Record sent",
@@ -31,11 +31,9 @@ export default function InboundPage() {
         </div>
 
         <div className="space-y-3">
-          {items.map((item) => {
-            const content = (
-              <Card
-                className={item.href ? "transition-colors hover:bg-background-chat" : undefined}
-              >
+          {items.map((item) => (
+            <Link key={item.id} href={`/console/inbound/${item.id}`} className="block">
+              <Card className="transition-colors hover:bg-background-chat">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <h2 className="text-lg font-semibold text-foreground">{item.patient}</h2>
@@ -54,15 +52,8 @@ export default function InboundPage() {
                   )}
                 </div>
               </Card>
-            );
-            return item.href ? (
-              <Link key={item.patient} href={item.href} className="block">
-                {content}
-              </Link>
-            ) : (
-              <div key={item.patient}>{content}</div>
-            );
-          })}
+            </Link>
+          ))}
         </div>
       </div>
     </NavShell>

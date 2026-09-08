@@ -16,7 +16,7 @@ const providerTabs = [
     href: "/console/inbound",
     label: "Inbound",
     icon: Inbox,
-    match: (p: string) => p === "/console/inbound" || p.startsWith("/console/post-visit"),
+    match: (p: string) => p.startsWith("/console/inbound") || p.startsWith("/console/post-visit"),
   },
   { href: "/console/escalations", label: "Escalations", icon: AlertTriangle, match: (p: string) => p === "/console/escalations" },
   { href: "/console/fine-tuning", label: "Fine-tuning", icon: SlidersHorizontal, match: (p: string) => p === "/console/fine-tuning" },
