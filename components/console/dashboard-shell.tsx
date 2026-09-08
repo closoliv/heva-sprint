@@ -5,27 +5,96 @@ import { usePathname } from "next/navigation";
 import {
   AlertTriangle,
   Calendar,
+  HelpCircle,
   Inbox,
   LayoutDashboard,
   Search,
+  Settings,
   SlidersHorizontal,
   UserRound,
+  Wallet,
+  type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ESCALATIONS_NEEDING_ATTENTION } from "@/lib/escalations";
 
-const navItems = [
+type NavItem = {
+  label: string;
+  icon: LucideIcon;
+  href: string | null;
+  match: ((p: string) => boolean) | null;
+  count?: number;
+};
+
+const navItems: NavItem[] = [
   { label: "Overview", icon: LayoutDashboard, href: null, match: null },
   { label: "Appointments", icon: Calendar, href: null, match: null },
   {
     label: "Inbound",
     icon: Inbox,
     href: "/console/inbound",
-    match: (p: string) => p.startsWith("/console/inbound") || p.startsWith("/console/post-visit"),
+    match: (p) => p.startsWith("/console/inbound") || p.startsWith("/console/post-visit"),
   },
-  { label: "Escalations", icon: AlertTriangle, href: "/console", match: (p: string) => p === "/console" },
-  { label: "Fine-tuning", icon: SlidersHorizontal, href: "/console/fine-tuning", match: (p: string) => p === "/console/fine-tuning" },
-  { label: "Profile", icon: UserRound, href: "/console/profile", match: (p: string) => p === "/console/profile" },
+  {
+    label: "Escalations",
+    icon: AlertTriangle,
+    href: "/console",
+    match: (p) => p === "/console",
+    count: ESCALATIONS_NEEDING_ATTENTION,
+  },
+  {
+    label: "Fine-tuning",
+    icon: SlidersHorizontal,
+    href: "/console/fine-tuning",
+    match: (p) => p === "/console/fine-tuning",
+  },
+  { label: "Wallet", icon: Wallet, href: null, match: null },
+  {
+    label: "Profile",
+    icon: UserRound,
+    href: "/console/profile",
+    match: (p) => p === "/console/profile",
+  },
 ];
+
+const bottomNavItems: NavItem[] = [
+  { label: "Support", icon: HelpCircle, href: null, match: null },
+  { label: "Settings", icon: Settings, href: null, match: null },
+];
+
+function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
+  const { label, icon: Icon, href, match, count = 0 } = item;
+  const active = match ? match(pathname) : false;
+  const rowClasses = cn(
+    "flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors md:justify-start",
+    active ? "bg-brand-50 text-brand" : href ? "text-foreground hover:bg-white" : "cursor-default text-muted"
+  );
+  const content = (
+    <>
+      <span className="relative shrink-0">
+        <Icon size={18} strokeWidth={active ? 2.4 : 1.8} />
+        {count > 0 && (
+          <span className="absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-pill bg-red-600 text-[9px] font-semibold text-white md:hidden">
+            {count}
+          </span>
+        )}
+      </span>
+      <span className="hidden flex-1 md:inline">{label}</span>
+      {count > 0 && (
+        <span className="hidden shrink-0 rounded-pill bg-red-600 px-1.5 py-0.5 text-[11px] font-semibold text-white md:inline">
+          {count}
+        </span>
+      )}
+    </>
+  );
+  return href ? (
+    <Link href={href} className={rowClasses}>
+      {content}
+    </Link>
+  ) : (
+    <div className={rowClasses}>{content}</div>
+  );
+}
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -44,24 +113,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <nav className="space-y-1">
-          {navItems.map(({ label, icon: Icon, href, match }) => {
-            const active = match ? match(pathname) : false;
-            const rowClasses = cn(
-              "flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors md:justify-start",
-              active ? "bg-brand-50 text-brand" : href ? "text-foreground hover:bg-white" : "cursor-default text-muted"
-            );
-            return href ? (
-              <Link key={label} href={href} className={rowClasses}>
-                <Icon size={18} strokeWidth={active ? 2.4 : 1.8} />
-                <span className="hidden md:inline">{label}</span>
-              </Link>
-            ) : (
-              <div key={label} className={rowClasses}>
-                <Icon size={18} strokeWidth={1.8} />
-                <span className="hidden md:inline">{label}</span>
-              </div>
-            );
-          })}
+          {navItems.map((item) => (
+            <NavRow key={item.label} item={item} pathname={pathname} />
+          ))}
+        </nav>
+
+        <nav className="mt-auto space-y-1 border-t border-border pt-4">
+          {bottomNavItems.map((item) => (
+            <NavRow key={item.label} item={item} pathname={pathname} />
+          ))}
         </nav>
       </aside>
 

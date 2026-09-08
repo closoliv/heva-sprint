@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { NavShell } from "@/components/nav-shell";
+import { DashboardShell } from "@/components/console/dashboard-shell";
 
 const preferences = [
   {
@@ -18,8 +18,8 @@ const preferences = [
 
 export default function FineTuningPage() {
   return (
-    <NavShell title="Fine-tuning" nav="provider">
-      <div className="space-y-6 p-4">
+    <DashboardShell>
+      <div className="space-y-6 p-4 sm:p-8">
         <div>
           <h1 className="text-3xl font-semibold text-foreground">Fine-tuning</h1>
           <p className="mt-1 text-sm text-muted">
@@ -35,6 +35,6 @@ export default function FineTuningPage() {
           ))}
         </div>
       </div>
-    </NavShell>
+    </DashboardShell>
   );
 }

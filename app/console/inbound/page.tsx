@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { NavShell } from "@/components/nav-shell";
+import { DashboardShell } from "@/components/console/dashboard-shell";
 import { CheckCircle2, Clock } from "lucide-react";
 
 const items = [
@@ -23,8 +23,8 @@ const items = [
 
 export default function InboundPage() {
   return (
-    <NavShell title="Inbound" nav="provider">
-      <div className="space-y-6 p-4">
+    <DashboardShell>
+      <div className="space-y-6 p-4 sm:p-8">
         <div>
           <h1 className="text-3xl font-semibold text-foreground">Inbound</h1>
           <p className="mt-1 text-sm text-muted">Patients from today's visits who need a next step.</p>
@@ -56,6 +56,6 @@ export default function InboundPage() {
           ))}
         </div>
       </div>
-    </NavShell>
+    </DashboardShell>
   );
 }

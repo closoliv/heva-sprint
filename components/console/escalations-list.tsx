@@ -1,89 +1,7 @@
 import Link from "next/link";
 import { CheckCircle2, Instagram, ListFilter, MessageCircle, Search, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const escalations = [
-  {
-    href: "/console/inbound/sofia-ramirez",
-    patient: "Sofía Ramírez",
-    channel: "WhatsApp" as const,
-    appointmentDate: "Sep 8, 2026",
-    procedure: "ACL reconstruction",
-    status: "attention" as const,
-  },
-  {
-    href: null,
-    patient: "James Okafor",
-    channel: "WhatsApp" as const,
-    appointmentDate: "Sep 7, 2026",
-    procedure: "Rotator cuff repair",
-    status: "in_progress" as const,
-  },
-  {
-    href: null,
-    patient: "Elena Vasquez",
-    channel: "Instagram" as const,
-    appointmentDate: "Sep 6, 2026",
-    procedure: "Meniscus repair",
-    status: "attention" as const,
-  },
-  {
-    href: null,
-    patient: "Marcus Webb",
-    channel: "WhatsApp" as const,
-    appointmentDate: "Sep 5, 2026",
-    procedure: "Rotator cuff repair",
-    status: "in_progress" as const,
-  },
-  {
-    href: null,
-    patient: "Priya Nair",
-    channel: "Instagram" as const,
-    appointmentDate: "Sep 5, 2026",
-    procedure: "Knee arthroscopy",
-    status: "attention" as const,
-  },
-  {
-    href: null,
-    patient: "Tomás Herrera",
-    channel: "WhatsApp" as const,
-    appointmentDate: "Sep 4, 2026",
-    procedure: "ACL reconstruction",
-    status: "in_progress" as const,
-  },
-  {
-    href: null,
-    patient: "Grace Kim",
-    channel: "Instagram" as const,
-    appointmentDate: "Sep 3, 2026",
-    procedure: "Meniscus repair",
-    status: "attention" as const,
-  },
-  {
-    href: null,
-    patient: "Daniel Osei",
-    channel: "WhatsApp" as const,
-    appointmentDate: "Sep 2, 2026",
-    procedure: "Knee arthroscopy",
-    status: "resolved" as const,
-  },
-  {
-    href: null,
-    patient: "Lucía Fernández",
-    channel: "Instagram" as const,
-    appointmentDate: "Sep 1, 2026",
-    procedure: "ACL reconstruction",
-    status: "resolved" as const,
-  },
-  {
-    href: null,
-    patient: "Omar Haddad",
-    channel: "WhatsApp" as const,
-    appointmentDate: "Sep 1, 2026",
-    procedure: "Rotator cuff repair",
-    status: "resolved" as const,
-  },
-];
+import { ESCALATIONS } from "@/lib/escalations";
 
 function StatusBadge({ status }: { status: "attention" | "in_progress" | "resolved" }) {
   if (status === "attention") {
@@ -140,41 +58,69 @@ export function EscalationsList() {
         </button>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-border">
-        <table className="w-full min-w-[640px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-border bg-background-chat text-xs font-medium uppercase tracking-wide text-muted">
-              <th className="px-4 py-3 font-medium">Patient</th>
-              <th className="px-4 py-3 font-medium">Contact channel</th>
-              <th className="px-4 py-3 font-medium">Appointment date</th>
-              <th className="px-4 py-3 font-medium">Procedure</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {escalations.map((e) => (
-              <tr key={e.patient} className={cn(e.href && "hover:bg-background-chat")}>
-                <td className="px-4 py-3 font-medium text-foreground">
-                  {e.href ? (
-                    <Link href={e.href} className="text-brand hover:underline">
-                      {e.patient}
-                    </Link>
-                  ) : (
-                    e.patient
-                  )}
-                </td>
-                <td className="px-4 py-3">
-                  <ChannelCell channel={e.channel} />
-                </td>
-                <td className="px-4 py-3 text-slate">{e.appointmentDate}</td>
-                <td className="px-4 py-3 text-slate">{e.procedure}</td>
-                <td className="px-4 py-3">
-                  <StatusBadge status={e.status} />
-                </td>
+      <div className="overflow-hidden rounded-lg border border-border">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[640px] text-left text-sm">
+            <thead>
+              <tr className="border-b border-border bg-background-chat text-xs font-medium uppercase tracking-wide text-muted">
+                <th className="px-4 py-3 font-medium">Patient</th>
+                <th className="px-4 py-3 font-medium">Contact channel</th>
+                <th className="px-4 py-3 font-medium">Appointment date</th>
+                <th className="px-4 py-3 font-medium">Procedure</th>
+                <th className="px-4 py-3 font-medium">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {ESCALATIONS.map((e) => (
+                <tr key={e.patient} className={cn(e.href && "hover:bg-background-chat")}>
+                  <td className="px-4 py-3 font-medium">
+                    {e.href ? (
+                      <Link href={e.href} className="text-brand hover:underline">
+                        {e.patient}
+                      </Link>
+                    ) : (
+                      <span className="cursor-pointer text-brand hover:underline">{e.patient}</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <ChannelCell channel={e.channel} />
+                  </td>
+                  <td className="px-4 py-3 text-slate">{e.appointmentDate}</td>
+                  <td className="px-4 py-3 text-slate">{e.procedure}</td>
+                  <td className="px-4 py-3">
+                    <StatusBadge status={e.status} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-border bg-white px-4 py-3 text-sm sm:flex-row">
+          <p className="text-muted">
+            Showing <span className="font-medium text-foreground">1–{ESCALATIONS.length}</span> of{" "}
+            <span className="font-medium text-foreground">{ESCALATIONS.length}</span> escalations
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled
+              className="rounded-pill border border-border px-3 py-1.5 text-sm font-medium text-muted disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <span className="flex h-8 w-8 items-center justify-center rounded-pill bg-brand-50 text-sm font-medium text-brand">
+              1
+            </span>
+            <button
+              type="button"
+              disabled
+              className="rounded-pill border border-border px-3 py-1.5 text-sm font-medium text-muted disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

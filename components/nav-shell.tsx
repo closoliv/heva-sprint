@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AlertTriangle, Inbox, MessageCircle, SlidersHorizontal, Store, UserRound } from "lucide-react";
+import { MessageCircle, Store, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const patientTabs = [
@@ -11,31 +11,16 @@ const patientTabs = [
   { href: "/chat", label: "Chat", icon: MessageCircle, match: (p: string) => p.startsWith("/chat") },
 ];
 
-const providerTabs = [
-  {
-    href: "/console/inbound",
-    label: "Inbound",
-    icon: Inbox,
-    match: (p: string) => p.startsWith("/console/inbound") || p.startsWith("/console/post-visit"),
-  },
-  { href: "/console/escalations", label: "Escalations", icon: AlertTriangle, match: (p: string) => p === "/console/escalations" },
-  { href: "/console/fine-tuning", label: "Fine-tuning", icon: SlidersHorizontal, match: (p: string) => p === "/console/fine-tuning" },
-  { href: "/console/profile", label: "Profile", icon: UserRound, match: (p: string) => p === "/console/profile" },
-];
-
 export function NavShell({
   title,
-  nav = "patient",
   wide = false,
   children,
 }: {
   title?: string;
-  nav?: "patient" | "provider";
   wide?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const tabs = nav === "provider" ? providerTabs : patientTabs;
 
   return (
     <div className="flex h-dvh flex-col bg-white">
@@ -50,7 +35,7 @@ export function NavShell({
         )}
 
         <nav className="ml-auto flex items-center gap-1 sm:gap-2">
-          {tabs.map(({ href, label, icon: Icon, match }) => {
+          {patientTabs.map(({ href, label, icon: Icon, match }) => {
             const active = match(pathname);
             return (
               <Link

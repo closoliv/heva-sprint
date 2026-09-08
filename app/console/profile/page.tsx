@@ -1,11 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { NavShell } from "@/components/nav-shell";
+import { DashboardShell } from "@/components/console/dashboard-shell";
 
 export default function ProviderProfilePage() {
   return (
-    <NavShell title="Profile" nav="provider">
-      <div className="space-y-4 p-4">
+    <DashboardShell>
+      <div className="space-y-4 p-4 sm:p-8">
         <Card className="flex flex-col items-center gap-3 text-center">
           <div className="h-28 w-28 rounded-lg bg-background-chat" aria-hidden />
           <div>
@@ -25,6 +25,6 @@ export default function ProviderProfilePage() {
           </p>
         </div>
       </div>
-    </NavShell>
+    </DashboardShell>
   );
 }
