@@ -26,10 +26,12 @@ const providerTabs = [
 export function NavShell({
   title,
   nav = "patient",
+  wide = false,
   children,
 }: {
   title?: string;
   nav?: "patient" | "provider";
+  wide?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -68,7 +70,7 @@ export function NavShell({
       </header>
 
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto h-full w-full max-w-[800px]">{children}</div>
+        <div className={cn("mx-auto h-full w-full", wide ? "max-w-6xl" : "max-w-[800px]")}>{children}</div>
       </main>
     </div>
   );

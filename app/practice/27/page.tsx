@@ -1,23 +1,37 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { Star } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Clock, MapPin, MessageCircle, Star, Stethoscope, Store } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { NavShell } from "@/components/nav-shell";
+import { cn } from "@/lib/utils";
 
 const procedures = ["ACL reconstruction", "Rotator cuff repair", "Meniscus repair", "Knee arthroscopy"];
 
+const ABOUT_TEXT =
+  "Dr. Bianchi is an orthopaedic surgeon specializing in ACL reconstruction and sports medicine, with over 12 years treating international patients through heva. Trained in minimally invasive arthroscopic techniques, Dr. Bianchi has performed more than 800 ACL reconstructions using hamstring, patellar tendon, and allograft methods tailored to each patient's activity level and recovery goals. Known for thorough post-visit follow-up and same-day care summaries, Dr. Bianchi's practice emphasizes clear communication before, during, and after every procedure — especially important for patients traveling from abroad who need a reliable record to bring home to their local care team.";
+
+const ADDRESS = "Clínica Bianchi, San José, Costa Rica";
+const MAP_EMBED_URL = `https://www.google.com/maps?q=${encodeURIComponent(ADDRESS)}&output=embed`;
+
 export default function PracticeProfilePage() {
+  const [aboutExpanded, setAboutExpanded] = useState(false);
+
   return (
-    <NavShell title="Practice">
-      <div className="space-y-4 p-4">
-        <Card className="flex flex-col items-center gap-3 text-center">
-          <div className="h-28 w-28 rounded-lg bg-background-chat" aria-hidden />
+    <NavShell title="Practice" wide>
+      <div className="grid grid-cols-1 gap-8 p-4 sm:p-8 lg:grid-cols-[280px_1fr]">
+        {/* Left column */}
+        <div className="space-y-4">
+          <div className="aspect-[0.87/1] w-full rounded-lg bg-background-chat" aria-hidden />
+
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Dr. Bianchi</h1>
-            <p className="text-sm text-muted">Orthopaedic surgery, Sports medicine</p>
+            <p className="mt-1 text-sm text-muted">Orthopaedic surgery, Sports medicine</p>
           </div>
-          <div className="flex flex-wrap justify-center gap-2">
+
+          <div className="flex flex-wrap gap-2">
             <Badge>Verified provider</Badge>
             <Badge>heva partner</Badge>
             <Badge className="text-brand">
@@ -25,34 +39,78 @@ export default function PracticeProfilePage() {
               Super provider
             </Badge>
           </div>
-        </Card>
 
-        <div>
-          <h2 className="text-xl font-semibold text-foreground">About</h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate">
-            Dr. Bianchi is an orthopaedic surgeon specializing in ACL reconstruction and sports
-            medicine, with over 12 years treating international patients through heva. Known for
-            thorough post-visit follow-up and same-day care summaries.
-          </p>
-        </div>
+          <div className="space-y-2 text-sm text-slate">
+            <div className="flex items-center gap-2">
+              <Clock size={16} className="shrink-0 text-muted" />
+              Mon – Sat · 9AM – 5PM
+            </div>
+            <div className="flex items-start gap-2">
+              <MapPin size={16} className="mt-0.5 shrink-0 text-muted" />
+              <span>{ADDRESS}</span>
+            </div>
+          </div>
 
-        <div>
-          <h2 className="text-xl font-semibold text-foreground">Procedures</h2>
-          <div className="mt-2 grid grid-cols-2 gap-3">
-            {procedures.map((p) => (
-              <Card key={p} className="text-sm font-medium text-foreground">
-                {p}
-              </Card>
-            ))}
+          <div className="space-y-2 pt-2">
+            <Link href="/chat" className="block">
+              <Button variant="primary" className="w-full">
+                <MessageCircle size={16} />
+                Chat now
+              </Button>
+            </Link>
+            <Link href="/list" className="block">
+              <Button variant="brand" className="w-full">
+                <Store size={16} />
+                heva Store
+              </Button>
+            </Link>
           </div>
         </div>
 
-        <div className="pt-2">
-          <Link href="/chat" className="block">
-            <Button variant="primary" className="w-full">
-              Chat now
-            </Button>
-          </Link>
+        {/* Right column */}
+        <div className="space-y-8">
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">About</h2>
+            <p
+              className={cn(
+                "mt-2 text-sm leading-relaxed text-slate",
+                !aboutExpanded && "line-clamp-3"
+              )}
+            >
+              {ABOUT_TEXT}
+            </p>
+            <button
+              onClick={() => setAboutExpanded((v) => !v)}
+              className="mt-1 text-sm font-medium text-brand hover:underline"
+            >
+              {aboutExpanded ? "Show less" : "Show more"}
+            </button>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">Procedures</h2>
+            <div className="mt-3 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
+              {procedures.map((p) => (
+                <div key={p} className="flex items-center gap-3">
+                  <Stethoscope size={18} className="shrink-0 text-muted" strokeWidth={1.5} />
+                  <span className="text-sm text-foreground">{p}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">Where to find me</h2>
+            <div className="mt-3 overflow-hidden rounded-lg border border-border">
+              <iframe
+                title="Practice location"
+                src={MAP_EMBED_URL}
+                className="h-80 w-full"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </NavShell>
