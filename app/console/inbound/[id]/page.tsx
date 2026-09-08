@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, User } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DashboardShell } from "@/components/console/dashboard-shell";
@@ -158,7 +158,9 @@ export default function PatientFilePage({ params }: { params: { id: string } }) 
           {/* Overview column */}
           <div className="space-y-4">
             <Card className="flex flex-col items-center gap-2 text-center">
-              <div className="h-16 w-16 rounded-pill bg-background-chat" aria-hidden />
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-pill bg-background-chat" aria-hidden>
+                <User size={28} strokeWidth={1.8} className="text-muted" />
+              </div>
               <div>
                 <h1 className="text-lg font-semibold text-foreground">{patient.name}</h1>
                 <p className="text-sm text-muted">{patient.demographics}</p>
