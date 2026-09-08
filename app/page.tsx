@@ -13,7 +13,7 @@ export default function Home() {
           </p>
         </div>
         <div className="space-y-2">
-          <Link href="/console/post-visit" className="block">
+          <Link href="/console" className="block">
             <Button variant="primary" className="w-full">
               Post-visit record
             </Button>
