@@ -4,3 +4,9 @@
 This project's visual system is derived from heva's own product (not invented from scratch). Before writing UI code, read `STYLE_GUIDE.md` — it has the tokens, directives, and anti-patterns in a form meant for exactly this handoff.
 
 Quick reference: bg `#FFFFFF`/`#F8FAFC` (chat), text `#2F2F30`/`#8C8D91`, brand `#0056D6`, accent `#C3FB11` (one CTA per screen only), 8px spacing base, radius 8/12/16/pill, mobile-first (~480-800px max width).
+
+## Portable Record — Post-Visit Prototype
+
+*Handoff spec: `Claude outputs/heva_acl_reconstruction_handoff.md`*
+
+Before building the post-visit record creation flow, read that file — it has the full interaction script (heva-console hybrid chat + quick-select), the ACL reconstruction demo content (clinically grounded, sourced), the patient-facing WhatsApp output, a rough data model, and a design-compliance section tying every UI choice back to `STYLE_GUIDE.md`.
