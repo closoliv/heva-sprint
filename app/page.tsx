@@ -6,6 +6,11 @@ const routes = [
   { href: "/list/1", title: "Detail pattern", desc: "Profile-style header + sections, mirrors app.heva.co/practice/27" },
   { href: "/list", title: "List pattern", desc: "Searchable, card-based list, mirrors the store page" },
   { href: "/chat", title: "Chat pattern", desc: "Suggestion pills + message input, mirrors the chat page" },
+  {
+    href: "/console/post-visit",
+    title: "Post-visit record",
+    desc: "Provider completes an ACL reconstruction record, hybrid chat + chips, then sends the WhatsApp summary",
+  },
 ];
 
 export default function Home() {
